@@ -3,8 +3,6 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
-import java.util.Map;
-import java.util.HashMap;
 import org.meveo.admin.job.FileProcessingJob;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -23,8 +21,6 @@ public class PostmanConfigurations implements CustomEntity {
     private DBStorageType storages;
 
     private String response;
-
-    private Map<String, String> context = new HashMap<>();
 
     private FileProcessingJob testField;
 
@@ -51,14 +47,6 @@ public class PostmanConfigurations implements CustomEntity {
 
     public void setResponse(String response) {
         this.response = response;
-    }
-
-    public Map<String, String> getContext() {
-        return context;
-    }
-
-    public void setContext(Map<String, String> context) {
-        this.context = context;
     }
 
     public FileProcessingJob getTestField() {
