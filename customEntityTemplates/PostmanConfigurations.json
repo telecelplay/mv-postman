@@ -3,7 +3,7 @@
   "name" : "Postman Processor",
   "description" : "Automated Postman Script Collections Processor",
   "customEntityCategoryCode" : "Automation",
-  "availableStorages" : [ ],
+  "availableStorages" : [ "SQL" ],
   "sqlStorageConfiguration" : {
     "storeAsTable" : true
   },
