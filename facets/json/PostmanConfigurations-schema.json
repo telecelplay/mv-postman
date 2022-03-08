@@ -1,5 +1,5 @@
 {
-    "storages": [],
+    "storages": ["SQL"],
     "default": "Automated Postman Script Collections Processor",
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "PostmanConfigurations",
