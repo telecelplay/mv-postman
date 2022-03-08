@@ -1,0 +1,47 @@
+{
+    "storages": ["SQL"],
+    "default": "Automated Postman Script Collections Processor",
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "id": "PostmanConfigurations",
+    "title": "Postman Processor",
+    "type": "object",
+    "properties": {
+        "fileName": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Collection File",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanConfigurations_fileName",
+            "title": "PostmanConfigurations.fileName",
+            "type": "string",
+            "maxLength": 255
+        },
+        "response": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Response",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanConfigurations_response",
+            "title": "PostmanConfigurations.response",
+            "type": "string"
+        },
+        "context": {
+            "storages": ["SQL"],
+            "patternProperties": {"^.*$": {
+                "id": "CE_PostmanConfigurations_context_item",
+                "title": "PostmanConfigurations.context item",
+                "type": "string",
+                "maxLength": 255
+            }},
+            "nullable": true,
+            "description": "Request Context",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanConfigurations_context",
+            "title": "PostmanConfigurations.context",
+            "type": "object"
+        }
+    }
+}
