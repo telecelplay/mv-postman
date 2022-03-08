@@ -1,0 +1,9 @@
+{
+  "code" : "mv-postman",
+  "description" : "schedule and run automated postman tests",
+  "license" : "GPL",
+  "currentVersion" : "0.1",
+  "isInDraft" : true,
+  "moduleDependencies" : [ ],
+  "moduleFiles" : [ ]
+}
