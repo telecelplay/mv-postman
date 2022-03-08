@@ -1,0 +1,12 @@
+{
+  "code" : "PostmanConfigurations",
+  "name" : "Postman Processor",
+  "description" : "Automated Postman Script Collections Processor",
+  "customEntityCategoryCode" : "Automation",
+  "availableStorages" : [ ],
+  "sqlStorageConfiguration" : {
+    "storeAsTable" : true
+  },
+  "samples" : [ ],
+  "audited" : false
+}
