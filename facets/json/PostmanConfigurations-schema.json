@@ -6,17 +6,6 @@
     "title": "Postman Processor",
     "type": "object",
     "properties": {
-        "fileName": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Collection File",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_PostmanConfigurations_fileName",
-            "title": "PostmanConfigurations.fileName",
-            "type": "string",
-            "maxLength": 255
-        },
         "response": {
             "storages": ["SQL"],
             "nullable": true,
@@ -42,6 +31,16 @@
             "id": "CE_PostmanConfigurations_context",
             "title": "PostmanConfigurations.context",
             "type": "object"
+        },
+        "testField": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "test",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanConfigurations_testField",
+            "title": "PostmanConfigurations.testField",
+            "$ref": "#/definitions/org.meveo.admin.job.FileProcessingJob"
         }
     }
 }
