@@ -18,7 +18,7 @@
   "guiPosition" : "tab:Postman Processor:0;field:1",
   "identifier" : false,
   "mapKeyType" : "STRING",
-  "storages" : [ "SQL" ],
+  "storages" : [ ],
   "samples" : [ ],
   "summary" : false,
   "audited" : false,
