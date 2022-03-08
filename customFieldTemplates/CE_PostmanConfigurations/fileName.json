@@ -1,6 +1,6 @@
 {
   "code" : "fileName",
-  "description" : "Collection File",
+  "description" : "Collection File Url",
   "fieldType" : "STRING",
   "accountLevel" : "CE_PostmanConfigurations",
   "appliesTo" : "CE_PostmanConfigurations",
@@ -17,7 +17,7 @@
   "saveOnExplorer" : false,
   "guiPosition" : "tab:Postman Processor:0;field:0",
   "identifier" : false,
-  "storages" : [ "SQL" ],
+  "storages" : [ ],
   "samples" : [ ],
   "summary" : false,
   "audited" : false,
