@@ -1,0 +1,1 @@
+{"code":"execute","description":"Click to execute postman scripts","appliesTo":"CE_PostmanConfigurations","label":"Run Scripts","script":"org.meveo.postman.PostmanProcessor","applicableToEntityList":false,"applicableToEntityInstance":true}
