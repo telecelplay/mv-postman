@@ -20,8 +20,6 @@ public class PostmanConfigurations implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
-    private String response;
-
     private FileProcessingJob testField;
 
     @Override()
@@ -39,14 +37,6 @@ public class PostmanConfigurations implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
-    }
-
-    public String getResponse() {
-        return response;
-    }
-
-    public void setResponse(String response) {
-        this.response = response;
     }
 
     public FileProcessingJob getTestField() {
