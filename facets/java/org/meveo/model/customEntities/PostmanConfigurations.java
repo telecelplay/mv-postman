@@ -5,6 +5,7 @@ import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import java.util.Map;
 import java.util.HashMap;
+import org.meveo.admin.job.FileProcessingJob;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class PostmanConfigurations implements CustomEntity {
@@ -21,11 +22,11 @@ public class PostmanConfigurations implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
-    private String fileName;
-
     private String response;
 
     private Map<String, String> context = new HashMap<>();
+
+    private FileProcessingJob testField;
 
     @Override()
     public String getUuid() {
@@ -44,14 +45,6 @@ public class PostmanConfigurations implements CustomEntity {
         this.storages = storages;
     }
 
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
     public String getResponse() {
         return response;
     }
@@ -66,6 +59,14 @@ public class PostmanConfigurations implements CustomEntity {
 
     public void setContext(Map<String, String> context) {
         this.context = context;
+    }
+
+    public FileProcessingJob getTestField() {
+        return testField;
+    }
+
+    public void setTestField(FileProcessingJob testField) {
+        this.testField = testField;
     }
 
     @Override()
