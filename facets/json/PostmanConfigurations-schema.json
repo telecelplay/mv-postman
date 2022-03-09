@@ -4,5 +4,15 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "PostmanConfigurations",
     "title": "Postman Processor",
-    "type": "object"
+    "type": "object",
+    "properties": {"testField": {
+        "storages": ["SQL"],
+        "nullable": true,
+        "description": "test",
+        "readOnly": false,
+        "versionable": false,
+        "id": "CE_PostmanConfigurations_testField",
+        "title": "PostmanConfigurations.testField",
+        "$ref": "#/definitions/org.meveo.admin.job.FileProcessingJob"
+    }}
 }
