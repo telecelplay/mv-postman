@@ -3,6 +3,7 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import org.meveo.admin.job.FileProcessingJob;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class PostmanConfigurations implements CustomEntity {
@@ -19,6 +20,8 @@ public class PostmanConfigurations implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private FileProcessingJob testField;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -34,6 +37,14 @@ public class PostmanConfigurations implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public FileProcessingJob getTestField() {
+        return testField;
+    }
+
+    public void setTestField(FileProcessingJob testField) {
+        this.testField = testField;
     }
 
     @Override()
