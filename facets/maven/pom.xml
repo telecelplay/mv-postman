@@ -8,7 +8,6 @@
   <properties>
     <maven.compiler.target>11</maven.compiler.target>
     <maven.compiler.source>11</maven.compiler.source>
-    <resteasy.version>4.3.1.Final</resteasy.version>
   </properties>
   <dependencyManagement>
     <dependencies>
