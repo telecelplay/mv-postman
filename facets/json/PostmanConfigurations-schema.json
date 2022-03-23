@@ -5,14 +5,52 @@
     "id": "PostmanConfigurations",
     "title": "Postman Processor",
     "type": "object",
-    "properties": {"testField": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "description": "test",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_PostmanConfigurations_testField",
-        "title": "PostmanConfigurations.testField",
-        "$ref": "#/definitions/org.meveo.admin.job.FileProcessingJob"
-    }}
+    "properties": {
+        "context": {
+            "storages": [],
+            "patternProperties": {"^.*$": {
+                "id": "CE_PostmanConfigurations_context_item",
+                "title": "PostmanConfigurations.context item",
+                "type": "string",
+                "maxLength": 255
+            }},
+            "nullable": true,
+            "description": "Request Context",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanConfigurations_context",
+            "title": "PostmanConfigurations.context",
+            "type": "object"
+        },
+        "failedTests": {
+            "storages": [],
+            "nullable": true,
+            "description": "Failed Test Requests",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanConfigurations_failedTests",
+            "title": "PostmanConfigurations.failedTests",
+            "type": "integer"
+        },
+        "collection": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "postman scripts collection",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanConfigurations_collection",
+            "title": "PostmanConfigurations.collection",
+            "type": "string"
+        },
+        "totalTests": {
+            "storages": [],
+            "nullable": true,
+            "description": "Total Test Requests",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanConfigurations_totalTests",
+            "title": "PostmanConfigurations.totalTests",
+            "type": "integer"
+        }
+    }
 }
