@@ -107,9 +107,34 @@ public class PostmanProcessor extends Script {
 			}
 		}
 	}
+  
 	@Override
-	public void execute(Map<String,Object> context) throws BusinessException {
+	public void execute(Map<String,Object> context) throws BusinessException {      
 		this.context=context;
+      	
+      	//if(args.length<2){
+        //    log.warn("usage : java -jar meveoman.jar <collectionFilename> <environmentFilename> [trustAllCertificates]");
+        //    System.out.println("  <collectionFilename>: filename (including path) of the postman 2.1 collection json file.");
+        //    System.out.println("  <environmentFilename>: filename (including path) the postmane environment json file to load and initialize the context.");
+        //    System.out.println("  trustAllCertificates: if this param is set then ssl certificates are not checked.");
+        //}
+      
+        //PostmanRunnerScript runner  = new PostmanRunnerScript();
+        //System.out.println("Load collection "+args[0]+ " and init context with env file "+args[1]);
+        //try {
+            //String postmanCollection = new String ( Files.readAllBytes( Paths.get(args[0]) ) );
+            //runner.setPostmanJsonCollection(postmanCollection);
+            //runner.setStopOnError(true);
+            //if(args.length==3 && "trustAllCertificates".equals(args[2])) {
+            //    runner.setTrustAllCertificates(true);
+            //}
+            //Map<String,Object> context = new HashMap<>();
+            //runner.loadEnvironment(args[1],context);
+            //runner.execute(context);
+        //} catch (IOException e) {
+        //    e.printStackTrace();
+        //}
+      
 		try {
 			jsEngine = new ScriptEngineManager().getEngineByName("graal.js");
 			Bindings bindings = jsEngine.createBindings();
@@ -185,6 +210,7 @@ public class PostmanProcessor extends Script {
 		return null;
 	}
 
+  
 	private void executeItem(Map<String,Object> item) throws ScriptException {
 		log.debug("executing item :"+item.get("name"));
 		ResteasyClientBuilder builder= new ResteasyClientBuilderImpl();
