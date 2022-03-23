@@ -6,6 +6,16 @@
     "title": "Postman Processor",
     "type": "object",
     "properties": {
+        "totalTest": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Total Tests",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanConfigurations_totalTest",
+            "title": "PostmanConfigurations.totalTest",
+            "type": "integer"
+        },
         "context": {
             "storages": [],
             "patternProperties": {"^.*$": {
