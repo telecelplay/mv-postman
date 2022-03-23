@@ -23,8 +23,6 @@ public class PostmanConfigurations implements CustomEntity {
 
     private Map<String, String> context = new HashMap<>();
 
-    private Long failedTests;
-
     private String collection;
 
     @Override()
@@ -50,14 +48,6 @@ public class PostmanConfigurations implements CustomEntity {
 
     public void setContext(Map<String, String> context) {
         this.context = context;
-    }
-
-    public Long getFailedTests() {
-        return failedTests;
-    }
-
-    public void setFailedTests(Long failedTests) {
-        this.failedTests = failedTests;
     }
 
     public String getCollection() {
