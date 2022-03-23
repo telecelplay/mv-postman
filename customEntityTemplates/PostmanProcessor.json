@@ -1,0 +1,11 @@
+{
+  "code" : "PostmanProcessor",
+  "name" : "Postman Processor",
+  "description" : "Postman Test Scripts Results",
+  "availableStorages" : [ "SQL" ],
+  "sqlStorageConfiguration" : {
+    "storeAsTable" : true
+  },
+  "samples" : [ ],
+  "audited" : false
+}
