@@ -21,8 +21,6 @@ public class PostmanConfigurations implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
-    private Long totalTest;
-
     private Map<String, String> context = new HashMap<>();
 
     private String collection;
@@ -42,14 +40,6 @@ public class PostmanConfigurations implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
-    }
-
-    public Long getTotalTest() {
-        return totalTest;
-    }
-
-    public void setTotalTest(Long totalTest) {
-        this.totalTest = totalTest;
     }
 
     public Map<String, String> getContext() {
