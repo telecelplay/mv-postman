@@ -5,32 +5,14 @@
     "id": "PostmanConfigurations",
     "title": "Postman Processor",
     "type": "object",
-    "properties": {
-        "context": {
-            "storages": [],
-            "patternProperties": {"^.*$": {
-                "id": "CE_PostmanConfigurations_context_item",
-                "title": "PostmanConfigurations.context item",
-                "type": "string",
-                "maxLength": 255
-            }},
-            "nullable": true,
-            "description": "Request Context",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_PostmanConfigurations_context",
-            "title": "PostmanConfigurations.context",
-            "type": "object"
-        },
-        "collection": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "postman scripts collection",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_PostmanConfigurations_collection",
-            "title": "PostmanConfigurations.collection",
-            "type": "string"
-        }
-    }
+    "properties": {"collection": {
+        "storages": ["SQL"],
+        "nullable": true,
+        "description": "postman scripts collection",
+        "readOnly": false,
+        "versionable": false,
+        "id": "CE_PostmanConfigurations_collection",
+        "title": "PostmanConfigurations.collection",
+        "type": "string"
+    }}
 }
