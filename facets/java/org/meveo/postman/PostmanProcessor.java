@@ -1,11 +1,11 @@
 package org.meveo.postman;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.apache.commons.codec.binary.Base64;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.internal.ResteasyClientBuilderImpl;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,12 +21,13 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Map;
 
 import org.meveo.service.script.Script;
 import org.meveo.admin.exception.BusinessException;
 
 public class PostmanProcessor extends Script {
-
+	
 	final static Logger log = LoggerFactory.getLogger(PostmanProcessor.class);
 
 	private Pattern postmanVarPattern = Pattern.compile("\\{\\{[^\\}]+\\}\\}");
@@ -411,5 +412,4 @@ public class PostmanProcessor extends Script {
 	public List<String> getFailedTestName() {
 		return failedTestName;
 	}
-	
 }
