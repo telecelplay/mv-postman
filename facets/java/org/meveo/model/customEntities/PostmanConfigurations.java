@@ -3,7 +3,8 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
-import org.meveo.admin.job.FileProcessingJob;
+import java.util.Map;
+import java.util.HashMap;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class PostmanConfigurations implements CustomEntity {
@@ -20,7 +21,13 @@ public class PostmanConfigurations implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
-    private FileProcessingJob testField;
+    private Map<String, String> context = new HashMap<>();
+
+    private Long failedTests;
+
+    private String collection;
+
+    private Long totalTests;
 
     @Override()
     public String getUuid() {
@@ -39,12 +46,36 @@ public class PostmanConfigurations implements CustomEntity {
         this.storages = storages;
     }
 
-    public FileProcessingJob getTestField() {
-        return testField;
+    public Map<String, String> getContext() {
+        return context;
     }
 
-    public void setTestField(FileProcessingJob testField) {
-        this.testField = testField;
+    public void setContext(Map<String, String> context) {
+        this.context = context;
+    }
+
+    public Long getFailedTests() {
+        return failedTests;
+    }
+
+    public void setFailedTests(Long failedTests) {
+        this.failedTests = failedTests;
+    }
+
+    public String getCollection() {
+        return collection;
+    }
+
+    public void setCollection(String collection) {
+        this.collection = collection;
+    }
+
+    public Long getTotalTests() {
+        return totalTests;
+    }
+
+    public void setTotalTests(Long totalTests) {
+        this.totalTests = totalTests;
     }
 
     @Override()
