@@ -27,8 +27,6 @@ public class PostmanConfigurations implements CustomEntity {
 
     private String collection;
 
-    private Long totalTests;
-
     @Override()
     public String getUuid() {
         return uuid;
@@ -68,14 +66,6 @@ public class PostmanConfigurations implements CustomEntity {
 
     public void setCollection(String collection) {
         this.collection = collection;
-    }
-
-    public Long getTotalTests() {
-        return totalTests;
-    }
-
-    public void setTotalTests(Long totalTests) {
-        this.totalTests = totalTests;
     }
 
     @Override()
