@@ -22,16 +22,6 @@
             "title": "PostmanConfigurations.context",
             "type": "object"
         },
-        "failedTests": {
-            "storages": [],
-            "nullable": true,
-            "description": "Failed Test Requests",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_PostmanConfigurations_failedTests",
-            "title": "PostmanConfigurations.failedTests",
-            "type": "integer"
-        },
         "collection": {
             "storages": ["SQL"],
             "nullable": true,
