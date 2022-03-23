@@ -41,16 +41,6 @@
             "id": "CE_PostmanConfigurations_collection",
             "title": "PostmanConfigurations.collection",
             "type": "string"
-        },
-        "totalTests": {
-            "storages": [],
-            "nullable": true,
-            "description": "Total Test Requests",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_PostmanConfigurations_totalTests",
-            "title": "PostmanConfigurations.totalTests",
-            "type": "integer"
         }
     }
 }
