@@ -2,6 +2,7 @@
   "code" : "PostmanProcessor",
   "name" : "Postman Processor",
   "description" : "Postman Test Scripts Results",
+  "customEntityCategoryCode" : "Automation",
   "availableStorages" : [ "SQL" ],
   "sqlStorageConfiguration" : {
     "storeAsTable" : true
