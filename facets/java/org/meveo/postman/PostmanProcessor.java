@@ -34,16 +34,6 @@ public class PostmanProcessor extends Script {
 	private ScriptEngine jsEngine;
 	private CookieRegister cookieRegister;
 
-	//input
-	private String postmanJsonCollection;
-	private boolean stopOnError=true;
-	private boolean trustAllCertificates;
-
-	//output
-	private int totalRequest = 0;
-	private int failedRequest = 0;
-	private int totalTest = 0;
-	private int failedTest = 0;
 	private List<String> failedRequestName = new ArrayList<>();
 	private List<String> failedTestName = new ArrayList<>();
 
@@ -156,6 +146,16 @@ public class PostmanProcessor extends Script {
 	}
 
 	private class PostmanRunnerScript {
+		//input
+		private String postmanJsonCollection;
+		private boolean stopOnError=true;
+		private boolean trustAllCertificates;
+
+		//output
+		private int totalRequest = 0;
+		private int failedRequest = 0;
+		private int totalTest = 0;
+		private int failedTest = 0;
 		private Map<String, Object> context;
 
 		private void runScript(Map<String, Object> context) {
