@@ -20,8 +20,6 @@ public class PostmanProcessor implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
-    private String context;
-
     private Instant executionDate;
 
     private String collection;
@@ -41,14 +39,6 @@ public class PostmanProcessor implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
-    }
-
-    public String getContext() {
-        return context;
-    }
-
-    public void setContext(String context) {
-        this.context = context;
     }
 
     public Instant getExecutionDate() {
