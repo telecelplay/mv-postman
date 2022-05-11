@@ -9,6 +9,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.meveo.model.customEntities.PostmanTestConfig;
 
 import javax.script.*;
 
@@ -85,8 +86,7 @@ public class PostmanProcessor extends Script {
 		}
 	}
 
-	public void loadEnvironment(String filename,Map<String, Object> context) throws IOException {
-		String postmanEnv = new String ( Files.readAllBytes( Paths.get(filename) ) );
+	public void loadEnvironment(String postmanEnv,Map<String, Object> context) throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		Map<String, Object> map = mapper.readValue(postmanEnv, Map.class);
 		log.info("load Postman environment "+map.get("name"));
@@ -131,10 +131,12 @@ public class PostmanProcessor extends Script {
 		PostmanRunnerScript runner  = new PostmanRunnerScript();
       	try{
 			String postmanCollection = new String ( Files.readAllBytes( Paths.get(this.collectionFile)));
-
+          	String postmanEnv = new String ( Files.readAllBytes( Paths.get(this.enviornmentFile) ) );
+			
+          	PostmanTestConfig config = new PostmanTestConfig();
 			runner.setPostmanJsonCollection(postmanCollection);
 			Map<String,Object> context = new HashMap<>();
-			this.loadEnvironment(enviornmentFile,context);
+			this.loadEnvironment(postmanEnv,context);
 			runner.runScript(context);
 		} catch (IOException ex){
 			ex.printStackTrace();
