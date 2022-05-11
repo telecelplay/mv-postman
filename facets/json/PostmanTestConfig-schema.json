@@ -37,17 +37,6 @@
             "type": "string",
             "maxLength": 255
         },
-        "contextFilePath": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Postman context file path",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_PostmanTestConfig_contextFilePath",
-            "title": "PostmanTestConfig.contextFilePath",
-            "type": "string",
-            "maxLength": 255
-        },
         "execuationDate": {
             "storages": ["SQL"],
             "nullable": true,
