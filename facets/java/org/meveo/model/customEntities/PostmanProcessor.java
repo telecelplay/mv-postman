@@ -3,7 +3,6 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
-import java.time.Instant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class PostmanProcessor implements CustomEntity {
@@ -19,8 +18,6 @@ public class PostmanProcessor implements CustomEntity {
 
     @JsonIgnore()
     private DBStorageType storages;
-
-    private Instant executionDate;
 
     private String collection;
 
@@ -39,14 +36,6 @@ public class PostmanProcessor implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
-    }
-
-    public Instant getExecutionDate() {
-        return executionDate;
-    }
-
-    public void setExecutionDate(Instant executionDate) {
-        this.executionDate = executionDate;
     }
 
     public String getCollection() {
