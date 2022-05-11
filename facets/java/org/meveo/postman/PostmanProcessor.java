@@ -34,11 +34,11 @@ public class PostmanProcessor extends Script {
   	private int totalTest = 0;
 	private int failedTest = 0;
 	
-  	private String enviornmentFile;
+  	private String environmentFile;
 	private String collectionFile;
 
-	private void setEnviornmentFile(String enviornmentFile){
-		this.enviornmentFile = enviornmentFile;
+	private void setEnvironmentFile(String environmentFile){
+		this.environmentFile = environmentFile;
 	}
 	private void setCollectionFile(String collectionFile){
 		this.collectionFile = collectionFile;
@@ -131,7 +131,7 @@ public class PostmanProcessor extends Script {
 		PostmanRunnerScript runner  = new PostmanRunnerScript();
       	try{
 			String postmanCollection = new String ( Files.readAllBytes( Paths.get(this.collectionFile)));
-          	String postmanEnv = new String ( Files.readAllBytes( Paths.get(this.enviornmentFile) ) );
+          	String postmanEnv = new String ( Files.readAllBytes( Paths.get(this.environmentFile) ) );
 			
           	PostmanTestConfig config = new PostmanTestConfig();
 			runner.setPostmanJsonCollection(postmanCollection);
