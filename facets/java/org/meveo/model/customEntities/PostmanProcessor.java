@@ -22,6 +22,8 @@ public class PostmanProcessor implements CustomEntity {
 
     private Long failedTest;
 
+    private Long totalTest;
+
     private String context;
 
     private Instant executionDate;
@@ -51,6 +53,14 @@ public class PostmanProcessor implements CustomEntity {
 
     public void setFailedTest(Long failedTest) {
         this.failedTest = failedTest;
+    }
+
+    public Long getTotalTest() {
+        return totalTest;
+    }
+
+    public void setTotalTest(Long totalTest) {
+        this.totalTest = totalTest;
     }
 
     public String getContext() {
