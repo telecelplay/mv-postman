@@ -6,17 +6,6 @@
     "title": "Postman Processor",
     "type": "object",
     "properties": {
-        "context": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Environment Context",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_PostmanProcessor_context",
-            "title": "PostmanProcessor.context",
-            "type": "string",
-            "maxLength": 255
-        },
         "executionDate": {
             "storages": ["SQL"],
             "nullable": true,
