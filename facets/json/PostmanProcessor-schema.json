@@ -16,6 +16,16 @@
             "title": "PostmanProcessor.failedTest",
             "type": "integer"
         },
+        "totalTest": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Total Tests",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanProcessor_totalTest",
+            "title": "PostmanProcessor.totalTest",
+            "type": "integer"
+        },
         "context": {
             "storages": ["SQL"],
             "nullable": true,
