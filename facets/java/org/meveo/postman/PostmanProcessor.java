@@ -10,6 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.meveo.model.customEntities.PostmanTestConfig;
+import org.meveo.service.storage.RepositoryService;
+import org.meveo.model.storage.Repository;
+import org.meveo.api.persistence.CrossStorageApi;
 
 import javax.script.*;
 
@@ -29,7 +32,10 @@ import org.meveo.admin.exception.BusinessException;
 
 public class PostmanProcessor extends Script {
 	
-	final static Logger log = LoggerFactory.getLogger(PostmanProcessor.class);
+	private final static Logger log = LoggerFactory.getLogger(PostmanProcessor.class);
+  	private CrossStorageApi crossStorageApi = getCDIBean(CrossStorageApi.class);
+	private RepositoryService repositoryService = getCDIBean(RepositoryService.class);
+	private Repository defaultRepo = repositoryService.findDefaultRepository();
 
   	private int totalTest = 0;
 	private int failedTest = 0;
@@ -134,6 +140,10 @@ public class PostmanProcessor extends Script {
           	String postmanEnv = new String ( Files.readAllBytes( Paths.get(this.environmentFile) ) );
 			
           	PostmanTestConfig config = new PostmanTestConfig();
+          	config.setEnvironmentFile(postmanEnv);
+          	config.setCollectionFile(postmanCollection);
+          	crossStorageApi.createOrUpdate(defaultRepo, config);	
+          
 			runner.setPostmanJsonCollection(postmanCollection);
 			Map<String,Object> context = new HashMap<>();
 			this.loadEnvironment(postmanEnv,context);
