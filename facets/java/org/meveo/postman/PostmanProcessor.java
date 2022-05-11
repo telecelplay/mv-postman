@@ -30,13 +30,6 @@ public class PostmanProcessor extends Script {
 	
 	final static Logger log = LoggerFactory.getLogger(PostmanProcessor.class);
 
-	private Pattern postmanVarPattern = Pattern.compile("\\{\\{[^\\}]+\\}\\}");
-	private ScriptEngine jsEngine;
-	private CookieRegister cookieRegister;
-
-	private List<String> failedRequestName = new ArrayList<>();
-	private List<String> failedTestName = new ArrayList<>();
-
 	private String enviornmentFile;
 	private String collectionFile;
 
@@ -157,6 +150,13 @@ public class PostmanProcessor extends Script {
 		private int totalTest = 0;
 		private int failedTest = 0;
 		private Map<String, Object> context;
+      
+      	private Pattern postmanVarPattern = Pattern.compile("\\{\\{[^\\}]+\\}\\}");
+		private ScriptEngine jsEngine;
+		private CookieRegister cookieRegister;
+
+		private List<String> failedRequestName = new ArrayList<>();
+		private List<String> failedTestName = new ArrayList<>();
 
 		private void runScript(Map<String, Object> context) {
 			try {
