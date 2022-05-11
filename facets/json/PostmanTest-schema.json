@@ -1,0 +1,8 @@
+{
+    "storages": [],
+    "default": "Postman test detail",
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "id": "PostmanTest",
+    "title": "Postman Test",
+    "type": "object"
+}
