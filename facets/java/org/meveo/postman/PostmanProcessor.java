@@ -142,319 +142,326 @@ public class PostmanProcessor extends Script {
         //} catch (IOException e) {
         //    e.printStackTrace();
         //}
+		PostmanRunnerScript runner  = new PostmanRunnerScript();
       	try{
 			String postmanCollection = new String ( Files.readAllBytes( Paths.get(this.collectionFile)));
-			this.setPostmanJsonCollection(postmanCollection);
+
+			runner.setPostmanJsonCollection(postmanCollection);
 			Map<String,Object> context = new HashMap<>();
 			this.loadEnvironment(enviornmentFile,context);
-			this.runScript(context);
+			runner.runScript(context);
 		} catch (IOException ex){
 			ex.printStackTrace();
 		}
 	}
 
-	private void runScript(Map<String, Object> context){
-		try {
-			jsEngine = new ScriptEngineManager().getEngineByName("graal.js");
-			Bindings bindings = jsEngine.createBindings();
-			bindings.put("polyglot.js.allowAllAccess", true);
-			context.forEach((k, v) -> {
-				if (v instanceof Integer) {
-					bindings.put(k, (int) v);
-				} else if (v instanceof Double) {
-					bindings.put(k, (double) v);
-				} else if (v instanceof Boolean) {
-					bindings.put(k, (boolean) v);
-				} else {
-					bindings.put(k,v.toString());//might be better to serialized to json in all cases ?
-				}
-			});
-			bindings.put("context",new PSContext(context));
-			ScriptContext scriptContext = new SimpleScriptContext();
-			scriptContext.setBindings(bindings,ScriptContext.GLOBAL_SCOPE);
-			jsEngine.setContext(scriptContext);
+	private class PostmanRunnerScript() {
+		private Map<String, Object> context;
 
-			cookieRegister = new CookieRegister();
-
-			ObjectMapper mapper = new ObjectMapper();
-			Map<String, Object> map = mapper.readValue(postmanJsonCollection, Map.class);
-			Map<String, Object> info = (Map<String, Object>)map.get("info");
-			log.info("executing collection :"+info.get("name"));
-			ArrayList<Object> items= (ArrayList<Object>)map.get("item");
-			executeItemList(items);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void executeItemList(ArrayList<Object> items) {
-		log.debug("items  :"+items.size());
-		for(Object rawItem : items){
-			Map<String,Object> item = (Map<String,Object>)rawItem;
-			boolean isSection=item.containsKey("item");
-			log.info("executing "+(isSection?"section":"test")+" :"+item.get("name"));
+		private void runScript(Map<String, Object> context) {
 			try {
-				ArrayList<Object> events = (ArrayList<Object>)item.get("event");
-				if(events!=null) {
-					executeEvent((String) item.get("name"), "prerequest", events);
-				}
-				if(isSection){
-					ArrayList<Object> itemList= (ArrayList<Object>)item.get("item");
-					executeItemList(itemList);
-				} else {
-					totalRequest++;
-					executeItem(item);
-				}
-				if(events!=null) {
-					executeEvent((String) item.get("name"), "test", events);
-				}
-			} catch (ScriptException e) {
-				e.printStackTrace();
-				failedRequest++;
-				failedRequestName.add((String) item.get("name"));
-				if (stopOnError) {
-					throw new RuntimeException(e);
-				}
-			}
-		}
-	}
-
-	private Object getValueByKey(String key,ArrayList<Object> list){
-		for(Object rawParam : list) {
-			Map<String,Object> param = (Map<String,Object>)rawParam;
-			if(key.equals(param.get("key"))) {
-				return param.get("value");
-			}
-		}
-		return null;
-	}
-
-  
-	private void executeItem(Map<String,Object> item) throws ScriptException {
-		log.debug("executing item :"+item.get("name"));
-		ResteasyClientBuilder builder= new ResteasyClientBuilderImpl();
-		if (trustAllCertificates) {
-			builder.disableTrustManager();
-		}
-		Client client = builder.build();
-
-		client.register(cookieRegister);
-		client.register(new LoggingFilter());
-
-		Map<String,Object> request = (Map<String,Object>)item.get("request");
-
-		Map<String,Object> url = (Map<String,Object>)request.get("url");
-		String rawUrl = (String) url.get("raw");
-		String resolvedUrl=replaceVars(rawUrl);
-		System.out.println("calling :"+resolvedUrl);
-		WebTarget target = client.target(resolvedUrl);
-		Invocation.Builder requestBuilder = target.request();
-		if(request.containsKey("auth")){
-			Map<String,Object> auth = (Map<String, Object>) request.get("auth");
-			String authType = (String)auth.get("type");
-			switch(authType){
-				case "bearer":
-					String token = replaceVars ((String)getValueByKey("token",(ArrayList<Object>)auth.get("bearer")));
-					log.info("Set bearer token to "+token);
-					requestBuilder.header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
-					break;
-				case "basic":
-					String password = replaceVars ((String)getValueByKey("password",(ArrayList<Object>)auth.get("basic")));
-					String username = replaceVars ((String)getValueByKey("username",(ArrayList<Object>)auth.get("basic")));
-					byte[] encodedAuth = Base64.encodeBase64((username + ":" + password).getBytes(Charset.forName("ISO-8859-1")));
-					requestBuilder.header(HttpHeaders.AUTHORIZATION, "Basic " + new String(encodedAuth));
-			}
-		}
-		if(request.containsKey("header")){
-			ArrayList<Object> headers = (ArrayList<Object>) request.get("header");
-			for(Object rawParam : headers) {
-				Map<String,Object> param = (Map<String,Object>)rawParam;
-				String val = replaceVars((String)param.get("value"));
-				log.info("add header "+param.get("key")+" = "+val);
-				requestBuilder.header((String)param.get("key"), val);
-			}
-		}
-		Response response=null;
-		if("GET".equals(request.get("method"))){
-			response = requestBuilder.get();
-		} else if("POST".equals(request.get("method"))||"PUT".equals(request.get("method"))){
-			Entity<?> entity=null;
-			Map<String,Object> body = (Map<String, Object>) request.get("body");
-			if("urlencoded".equals(body.get("mode"))) {
-				ArrayList<Object> formdata = (ArrayList<Object>) body.get("urlencoded");
-				Form form = new Form();
-				for(Object rawParam : formdata) {
-					Map<String,Object> param = (Map<String,Object>)rawParam;
-					form.param((String)param.get("key"), replaceVars((String)param.get("value")));
-				}
-				entity = Entity.form(form);
-			} else if("formdata".equals(body.get("mode"))) {
-				ArrayList<Object> formdata = (ArrayList<Object>) body.get(body.get("mode"));
-				MultipartFormDataOutput mdo = new MultipartFormDataOutput();
-				for(Object rawParam : formdata) {
-					Map<String,Object> param = (Map<String,Object>)rawParam;
-					if("file".equals(param.get("type"))){
-						try{
-							mdo.addFormData((String)param.get("key"), new FileInputStream(new File(replaceVars((String)param.get("value")))),
-									MediaType.APPLICATION_OCTET_STREAM_TYPE);
-						} catch (FileNotFoundException e) {
-							response.close();
-							throw new ScriptException("cannot read file : "+request.get("method"));
-						}
+				this.context = context;
+				jsEngine = new ScriptEngineManager().getEngineByName("graal.js");
+				Bindings bindings = jsEngine.createBindings();
+				bindings.put("polyglot.js.allowAllAccess", true);
+				context.forEach((k, v) -> {
+					if (v instanceof Integer) {
+						bindings.put(k, (int) v);
+					} else if (v instanceof Double) {
+						bindings.put(k, (double) v);
+					} else if (v instanceof Boolean) {
+						bindings.put(k, (boolean) v);
 					} else {
-						MediaType mediaType = MediaType.TEXT_PLAIN_TYPE;
-						try{
-							MediaType.valueOf((String)param.get("contentType"));
-						} catch (Exception e){
-							mediaType = MediaType.TEXT_PLAIN_TYPE;
-						}
-						mdo.addFormData((String)param.get("key"),replaceVars((String)param.get("value")),mediaType);
+						bindings.put(k, v.toString());//might be better to serialized to json in all cases ?
 					}
-				}
-				entity = Entity.entity(mdo, MediaType.MULTIPART_FORM_DATA_TYPE);
-			} else if("raw".equals(body.get("mode"))){
-				entity = Entity.text(replaceVars((String)body.get("raw")));
-			} else if("file".equals(body.get("mode"))){
-				Map<String,Object> file = (Map<String, Object>) request.get("file");
-				MultipartFormDataOutput mdo = new MultipartFormDataOutput();
+				});
+				bindings.put("context", new PSContext(context));
+				ScriptContext scriptContext = new SimpleScriptContext();
+				scriptContext.setBindings(bindings, ScriptContext.GLOBAL_SCOPE);
+				jsEngine.setContext(scriptContext);
+
+				cookieRegister = new CookieRegister();
+
+				ObjectMapper mapper = new ObjectMapper();
+				Map<String, Object> map = mapper.readValue(postmanJsonCollection, Map.class);
+				Map<String, Object> info = (Map<String, Object>) map.get("info");
+				log.info("executing collection :" + info.get("name"));
+				ArrayList<Object> items = (ArrayList<Object>) map.get("item");
+				executeItemList(items);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		private void executeItemList(ArrayList<Object> items) {
+			log.debug("items  :" + items.size());
+			for (Object rawItem : items) {
+				Map<String, Object> item = (Map<String, Object>) rawItem;
+				boolean isSection = item.containsKey("item");
+				log.info("executing " + (isSection ? "section" : "test") + " :" + item.get("name"));
 				try {
-					mdo.addFormData("file", new FileInputStream(new File(replaceVars((String)file.get("src")))),
-							MediaType.APPLICATION_OCTET_STREAM_TYPE); //NOTE we allow to use variables in the file src
-				} catch (FileNotFoundException e) {
-					response.close();
-					throw new ScriptException("cannot read file : "+request.get("method"));
-				}
-				entity = Entity.entity(mdo, MediaType.MULTIPART_FORM_DATA_TYPE);
-			}
-			if("POST".equals(request.get("method"))) {
-				response = requestBuilder.post(entity);
-			} else {
-				response = requestBuilder.put(entity);
-			}
-		} else if("DELETE".equals(request.get("method"))){
-			response = requestBuilder.delete();
-		}
-		if(response==null) {
-			response.close();
-			throw new ScriptException("invalid request type : " + request.get("method"));
-		}
-		log.debug("response status :"+response.getStatus());
-		jsEngine.getContext().setAttribute("req_status",response.getStatus(),ScriptContext.GLOBAL_SCOPE);
-		if(response.getStatus()>=300){
-			response.close();
-			throw new ScriptException("response status "+response.getStatus());
-		}
-		cookieRegister.addCookiesFromResponse(response);
-		String value = response.readEntity(String.class);
-		log.info("response  :"+value);
-		response.close();
-		jsEngine.getContext().setAttribute("req_response",value,ScriptContext.GLOBAL_SCOPE);
-	}
-
-	public String replaceVars(String input){
-		StringBuffer result=new StringBuffer();
-		Matcher matcher= postmanVarPattern.matcher(input);
-		while (matcher.find()) {
-			String replacement="";
-			String var =matcher.group(0).substring(2);
-			var = var.substring(0,var.length()-2);
-			if(context.containsKey(var)){
-				replacement=context.get(var).toString();
-			}
-			matcher.appendReplacement(result,replacement);
-			log.debug("replaced :"+matcher.group(0)+" by "+replacement);
-		}
-		matcher.appendTail(result);
-		return result.toString();
-	}
-
-	public void executeEvent(String itemName,String eventName,ArrayList<Object> events) throws ScriptException {
-		for (Object e : events) {
-			Map<String,Object> event = (Map<String,Object>) e;
-			String listen = (String)(event.get("listen"));
-			if (eventName.equals(listen)) {
-				Map<String,Object> script = (Map<String,Object>)event.get("script");
-				if("text/javascript".equals(script.get("type"))) {
-					log.debug("exec class:"+script.get("exec").getClass());
-					ArrayList<Object> exec =(ArrayList<Object>)script.get("exec");
-					StringBuilder sb = new StringBuilder();
-					for(Object line:exec){
-						sb.append((String)line);
-						sb.append("\n");
+					ArrayList<Object> events = (ArrayList<Object>) item.get("event");
+					if (events != null) {
+						executeEvent((String) item.get("name"), "prerequest", events);
 					}
-					String scriptSource=sb.toString();
-
-					String preSecript="var pm={};\n" +
-							"pm.info={};\n" +
-							"pm.info.eventName='"+eventName+"';\n" +
-							"pm.info.iteration=1;\n" +
-							"pm.info.iterationCount=1;\n" +
-							"pm.info.requestName='"+itemName+"';\n" +
-							"pm.info.requestId='"+event.get("id")+"';\n" +
-							"pm.environment=context;\n"+
-							"pm.test = function(s,f){\n" +
-							"let result = null;\n" +
-							"try{ result=f(); }\n" +
-							"catch(error){throw 'test failed: '+s+' reason: '+error};\n" +
-							"if(result != undefined){;\n" +
-							"if(!result){throw 'test failed: '+s;}"+
-							"};\n" +
-							"};";
-					if("test".equals(eventName)){
-						preSecript+="pm.response = {};\n" +
-								"pm.response.text=function(){ return req_response};\n" +
-								"pm.response.json=function(){ return JSON.parse(req_response)};"+
-								"pm.response.to={};\n"+
-								"pm.response.to.have={};\n"+
-								"pm.response.to.have.status=function(status){if(status!=req_status){throw 'invalid status'+s}};\n"+
-								"pm.response.to.be={};\n"+
-								"pm.response.to.be.oneOf=function(status){if(!status.includes(req_status)){throw 'invalid status'+s}};\n";
+					if (isSection) {
+						ArrayList<Object> itemList = (ArrayList<Object>) item.get("item");
+						executeItemList(itemList);
+					} else {
+						totalRequest++;
+						executeItem(item);
 					}
-					scriptSource =preSecript+scriptSource;
-					log.info("script = "+scriptSource);
-					jsEngine.eval(scriptSource);
+					if (events != null) {
+						executeEvent((String) item.get("name"), "test", events);
+					}
+				} catch (ScriptException e) {
+					e.printStackTrace();
+					failedRequest++;
+					failedRequestName.add((String) item.get("name"));
+					if (stopOnError) {
+						throw new RuntimeException(e);
+					}
 				}
 			}
 		}
-	}
 
-	public void setStopOnError(boolean stopOnError){
-		this.stopOnError=stopOnError;
-	}
+		private Object getValueByKey(String key, ArrayList<Object> list) {
+			for (Object rawParam : list) {
+				Map<String, Object> param = (Map<String, Object>) rawParam;
+				if (key.equals(param.get("key"))) {
+					return param.get("value");
+				}
+			}
+			return null;
+		}
 
-	public void setTrustAllCertificates(boolean trustAllCertificates){
-		this.trustAllCertificates=trustAllCertificates;
-	}
 
-	public void setPostmanJsonCollection(String postmanJsonCollection) {
-		this.postmanJsonCollection = postmanJsonCollection;
-	}
+		private void executeItem(Map<String, Object> item) throws ScriptException {
+			log.debug("executing item :" + item.get("name"));
+			ResteasyClientBuilder builder = new ResteasyClientBuilderImpl();
+			if (trustAllCertificates) {
+				builder.disableTrustManager();
+			}
+			Client client = builder.build();
 
-	public String getPostmanJsonCollection() {
-		return postmanJsonCollection;
-	}
+			client.register(cookieRegister);
+			client.register(new LoggingFilter());
 
-	public int getTotalRequest() {
-		return totalRequest;
-	}
+			Map<String, Object> request = (Map<String, Object>) item.get("request");
 
-	public int getFailedRequest() {
-		return failedRequest;
-	}
+			Map<String, Object> url = (Map<String, Object>) request.get("url");
+			String rawUrl = (String) url.get("raw");
+			String resolvedUrl = replaceVars(rawUrl);
+			System.out.println("calling :" + resolvedUrl);
+			WebTarget target = client.target(resolvedUrl);
+			Invocation.Builder requestBuilder = target.request();
+			if (request.containsKey("auth")) {
+				Map<String, Object> auth = (Map<String, Object>) request.get("auth");
+				String authType = (String) auth.get("type");
+				switch (authType) {
+					case "bearer":
+						String token = replaceVars((String) getValueByKey("token", (ArrayList<Object>) auth.get("bearer")));
+						log.info("Set bearer token to " + token);
+						requestBuilder.header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+						break;
+					case "basic":
+						String password = replaceVars((String) getValueByKey("password", (ArrayList<Object>) auth.get("basic")));
+						String username = replaceVars((String) getValueByKey("username", (ArrayList<Object>) auth.get("basic")));
+						byte[] encodedAuth = Base64.encodeBase64((username + ":" + password).getBytes(Charset.forName("ISO-8859-1")));
+						requestBuilder.header(HttpHeaders.AUTHORIZATION, "Basic " + new String(encodedAuth));
+				}
+			}
+			if (request.containsKey("header")) {
+				ArrayList<Object> headers = (ArrayList<Object>) request.get("header");
+				for (Object rawParam : headers) {
+					Map<String, Object> param = (Map<String, Object>) rawParam;
+					String val = replaceVars((String) param.get("value"));
+					log.info("add header " + param.get("key") + " = " + val);
+					requestBuilder.header((String) param.get("key"), val);
+				}
+			}
+			Response response = null;
+			if ("GET".equals(request.get("method"))) {
+				response = requestBuilder.get();
+			} else if ("POST".equals(request.get("method")) || "PUT".equals(request.get("method"))) {
+				Entity<?> entity = null;
+				Map<String, Object> body = (Map<String, Object>) request.get("body");
+				if ("urlencoded".equals(body.get("mode"))) {
+					ArrayList<Object> formdata = (ArrayList<Object>) body.get("urlencoded");
+					Form form = new Form();
+					for (Object rawParam : formdata) {
+						Map<String, Object> param = (Map<String, Object>) rawParam;
+						form.param((String) param.get("key"), replaceVars((String) param.get("value")));
+					}
+					entity = Entity.form(form);
+				} else if ("formdata".equals(body.get("mode"))) {
+					ArrayList<Object> formdata = (ArrayList<Object>) body.get(body.get("mode"));
+					MultipartFormDataOutput mdo = new MultipartFormDataOutput();
+					for (Object rawParam : formdata) {
+						Map<String, Object> param = (Map<String, Object>) rawParam;
+						if ("file".equals(param.get("type"))) {
+							try {
+								mdo.addFormData((String) param.get("key"), new FileInputStream(new File(replaceVars((String) param.get("value")))),
+										MediaType.APPLICATION_OCTET_STREAM_TYPE);
+							} catch (FileNotFoundException e) {
+								response.close();
+								throw new ScriptException("cannot read file : " + request.get("method"));
+							}
+						} else {
+							MediaType mediaType = MediaType.TEXT_PLAIN_TYPE;
+							try {
+								MediaType.valueOf((String) param.get("contentType"));
+							} catch (Exception e) {
+								mediaType = MediaType.TEXT_PLAIN_TYPE;
+							}
+							mdo.addFormData((String) param.get("key"), replaceVars((String) param.get("value")), mediaType);
+						}
+					}
+					entity = Entity.entity(mdo, MediaType.MULTIPART_FORM_DATA_TYPE);
+				} else if ("raw".equals(body.get("mode"))) {
+					entity = Entity.text(replaceVars((String) body.get("raw")));
+				} else if ("file".equals(body.get("mode"))) {
+					Map<String, Object> file = (Map<String, Object>) request.get("file");
+					MultipartFormDataOutput mdo = new MultipartFormDataOutput();
+					try {
+						mdo.addFormData("file", new FileInputStream(new File(replaceVars((String) file.get("src")))),
+								MediaType.APPLICATION_OCTET_STREAM_TYPE); //NOTE we allow to use variables in the file src
+					} catch (FileNotFoundException e) {
+						response.close();
+						throw new ScriptException("cannot read file : " + request.get("method"));
+					}
+					entity = Entity.entity(mdo, MediaType.MULTIPART_FORM_DATA_TYPE);
+				}
+				if ("POST".equals(request.get("method"))) {
+					response = requestBuilder.post(entity);
+				} else {
+					response = requestBuilder.put(entity);
+				}
+			} else if ("DELETE".equals(request.get("method"))) {
+				response = requestBuilder.delete();
+			}
+			if (response == null) {
+				response.close();
+				throw new ScriptException("invalid request type : " + request.get("method"));
+			}
+			log.debug("response status :" + response.getStatus());
+			jsEngine.getContext().setAttribute("req_status", response.getStatus(), ScriptContext.GLOBAL_SCOPE);
+			if (response.getStatus() >= 300) {
+				response.close();
+				throw new ScriptException("response status " + response.getStatus());
+			}
+			cookieRegister.addCookiesFromResponse(response);
+			String value = response.readEntity(String.class);
+			log.info("response  :" + value);
+			response.close();
+			jsEngine.getContext().setAttribute("req_response", value, ScriptContext.GLOBAL_SCOPE);
+		}
 
-	public int getTotalTest() {
-		return totalTest;
-	}
+		public String replaceVars(String input) {
+			StringBuffer result = new StringBuffer();
+			Matcher matcher = postmanVarPattern.matcher(input);
+			while (matcher.find()) {
+				String replacement = "";
+				String var = matcher.group(0).substring(2);
+				var = var.substring(0, var.length() - 2);
+				if (context.containsKey(var)) {
+					replacement = context.get(var).toString();
+				}
+				matcher.appendReplacement(result, replacement);
+				log.debug("replaced :" + matcher.group(0) + " by " + replacement);
+			}
+			matcher.appendTail(result);
+			return result.toString();
+		}
 
-	public int getFailedTest() {
-		return failedTest;
-	}
+		public void executeEvent(String itemName, String eventName, ArrayList<Object> events) throws ScriptException {
+			for (Object e : events) {
+				Map<String, Object> event = (Map<String, Object>) e;
+				String listen = (String) (event.get("listen"));
+				if (eventName.equals(listen)) {
+					Map<String, Object> script = (Map<String, Object>) event.get("script");
+					if ("text/javascript".equals(script.get("type"))) {
+						log.debug("exec class:" + script.get("exec").getClass());
+						ArrayList<Object> exec = (ArrayList<Object>) script.get("exec");
+						StringBuilder sb = new StringBuilder();
+						for (Object line : exec) {
+							sb.append((String) line);
+							sb.append("\n");
+						}
+						String scriptSource = sb.toString();
 
-	public List<String> getFailedRequestName() {
-		return failedRequestName;
-	}
+						String preSecript = "var pm={};\n" +
+								"pm.info={};\n" +
+								"pm.info.eventName='" + eventName + "';\n" +
+								"pm.info.iteration=1;\n" +
+								"pm.info.iterationCount=1;\n" +
+								"pm.info.requestName='" + itemName + "';\n" +
+								"pm.info.requestId='" + event.get("id") + "';\n" +
+								"pm.environment=context;\n" +
+								"pm.test = function(s,f){\n" +
+								"let result = null;\n" +
+								"try{ result=f(); }\n" +
+								"catch(error){throw 'test failed: '+s+' reason: '+error};\n" +
+								"if(result != undefined){;\n" +
+								"if(!result){throw 'test failed: '+s;}" +
+								"};\n" +
+								"};";
+						if ("test".equals(eventName)) {
+							preSecript += "pm.response = {};\n" +
+									"pm.response.text=function(){ return req_response};\n" +
+									"pm.response.json=function(){ return JSON.parse(req_response)};" +
+									"pm.response.to={};\n" +
+									"pm.response.to.have={};\n" +
+									"pm.response.to.have.status=function(status){if(status!=req_status){throw 'invalid status'+s}};\n" +
+									"pm.response.to.be={};\n" +
+									"pm.response.to.be.oneOf=function(status){if(!status.includes(req_status)){throw 'invalid status'+s}};\n";
+						}
+						scriptSource = preSecript + scriptSource;
+						log.info("script = " + scriptSource);
+						jsEngine.eval(scriptSource);
+					}
+				}
+			}
+		}
 
-	public List<String> getFailedTestName() {
-		return failedTestName;
+		public void setStopOnError(boolean stopOnError) {
+			this.stopOnError = stopOnError;
+		}
+
+		public void setTrustAllCertificates(boolean trustAllCertificates) {
+			this.trustAllCertificates = trustAllCertificates;
+		}
+
+		public void setPostmanJsonCollection(String postmanJsonCollection) {
+			this.postmanJsonCollection = postmanJsonCollection;
+		}
+
+		public String getPostmanJsonCollection() {
+			return postmanJsonCollection;
+		}
+
+		public int getTotalRequest() {
+			return totalRequest;
+		}
+
+		public int getFailedRequest() {
+			return failedRequest;
+		}
+
+		public int getTotalTest() {
+			return totalTest;
+		}
+
+		public int getFailedTest() {
+			return failedTest;
+		}
+
+		public List<String> getFailedRequestName() {
+			return failedRequestName;
+		}
+
+		public List<String> getFailedTestName() {
+			return failedTestName;
+		}
 	}
 }
