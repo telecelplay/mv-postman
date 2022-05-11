@@ -4,5 +4,15 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "PostmanProcessor",
     "title": "Postman Processor",
-    "type": "object"
+    "type": "object",
+    "properties": {"collection": {
+        "storages": ["SQL"],
+        "nullable": true,
+        "description": "Postman collection",
+        "readOnly": false,
+        "versionable": false,
+        "id": "CE_PostmanProcessor_collection",
+        "title": "PostmanProcessor.collection",
+        "type": "string"
+    }}
 }
