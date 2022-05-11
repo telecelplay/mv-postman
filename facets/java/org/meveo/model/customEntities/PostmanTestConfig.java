@@ -24,6 +24,8 @@ public class PostmanTestConfig implements CustomEntity {
 
     private Long totalTest;
 
+    private String collectionFile;
+
     private String environmentFile;
 
     private Instant execuationDate;
@@ -59,6 +61,14 @@ public class PostmanTestConfig implements CustomEntity {
 
     public void setTotalTest(Long totalTest) {
         this.totalTest = totalTest;
+    }
+
+    public String getCollectionFile() {
+        return collectionFile;
+    }
+
+    public void setCollectionFile(String collectionFile) {
+        this.collectionFile = collectionFile;
     }
 
     public String getEnvironmentFile() {
