@@ -1,0 +1,63 @@
+{
+    "storages": ["SQL"],
+    "default": "Postman test configurations",
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "id": "PostmanTestConfig",
+    "title": "Postman Configs",
+    "type": "object",
+    "properties": {
+        "failedTest": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Failed Tests",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanTestConfig_failedTest",
+            "title": "PostmanTestConfig.failedTest",
+            "type": "integer"
+        },
+        "totalTest": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Total Tests",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanTestConfig_totalTest",
+            "title": "PostmanTestConfig.totalTest",
+            "type": "integer"
+        },
+        "collectionFilePath": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Postman collection file path",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanTestConfig_collectionFilePath",
+            "title": "PostmanTestConfig.collectionFilePath",
+            "type": "string",
+            "maxLength": 255
+        },
+        "contextFilePath": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Postman context file path",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanTestConfig_contextFilePath",
+            "title": "PostmanTestConfig.contextFilePath",
+            "type": "string",
+            "maxLength": 255
+        },
+        "execuationDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Postman collection execution date",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanTestConfig_execuationDate",
+            "title": "PostmanTestConfig.execuationDate",
+            "type": "string"
+        }
+    }
+}
