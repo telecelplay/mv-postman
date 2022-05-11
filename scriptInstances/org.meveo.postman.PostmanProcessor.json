@@ -1,38 +1,8 @@
 {
   "code" : "org.meveo.postman.PostmanProcessor",
   "description" : "Execute postman scripts",
-  "inputs" : [ {
-    "name" : "stopOnError",
-    "type" : "boolean"
-  }, {
-    "name" : "trustAllCertificates",
-    "type" : "boolean"
-  }, {
-    "name" : "postmanJsonCollection",
-    "type" : "String"
-  } ],
-  "outputs" : [ {
-    "name" : "postmanJsonCollection",
-    "type" : "String"
-  }, {
-    "name" : "totalRequest",
-    "type" : "int"
-  }, {
-    "name" : "failedRequest",
-    "type" : "int"
-  }, {
-    "name" : "totalTest",
-    "type" : "int"
-  }, {
-    "name" : "failedTest",
-    "type" : "int"
-  }, {
-    "name" : "failedRequestName",
-    "type" : "List<String>"
-  }, {
-    "name" : "failedTestName",
-    "type" : "List<String>"
-  } ],
+  "inputs" : [ ],
+  "outputs" : [ ],
   "generateOutputs" : false,
   "type" : "JAVA",
   "transactionType" : "SAME",
