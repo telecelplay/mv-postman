@@ -26,6 +26,16 @@
             "title": "PostmanTestConfig.totalTest",
             "type": "integer"
         },
+        "collectionFile": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Collection File",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanTestConfig_collectionFile",
+            "title": "PostmanTestConfig.collectionFile",
+            "type": "string"
+        },
         "environmentFile": {
             "storages": ["SQL"],
             "nullable": true,
