@@ -20,8 +20,6 @@ public class PostmanProcessor implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
-    private Long failedTest;
-
     private Long totalTest;
 
     private String context;
@@ -45,14 +43,6 @@ public class PostmanProcessor implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
-    }
-
-    public Long getFailedTest() {
-        return failedTest;
-    }
-
-    public void setFailedTest(Long failedTest) {
-        this.failedTest = failedTest;
     }
 
     public Long getTotalTest() {
