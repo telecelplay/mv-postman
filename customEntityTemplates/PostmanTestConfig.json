@@ -1,0 +1,12 @@
+{
+  "code" : "PostmanTestConfig",
+  "name" : "Postman Configs",
+  "description" : "Postman test configurations",
+  "customEntityCategoryCode" : "Automation",
+  "availableStorages" : [ "SQL" ],
+  "sqlStorageConfiguration" : {
+    "storeAsTable" : true
+  },
+  "samples" : [ ],
+  "audited" : false
+}
