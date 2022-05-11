@@ -31,7 +31,6 @@ public class PostmanProcessor extends Script {
 	final static Logger log = LoggerFactory.getLogger(PostmanProcessor.class);
 
 	private Pattern postmanVarPattern = Pattern.compile("\\{\\{[^\\}]+\\}\\}");
-	private Map<String,Object> context;
 	private ScriptEngine jsEngine;
 	private CookieRegister cookieRegister;
 
@@ -47,6 +46,16 @@ public class PostmanProcessor extends Script {
 	private int failedTest = 0;
 	private List<String> failedRequestName = new ArrayList<>();
 	private List<String> failedTestName = new ArrayList<>();
+
+	private String enviornmentFile;
+	private String collectionFile;
+
+	private void setEnviornmentFile(String enviornmentFile){
+		this.enviornmentFile = enviornmentFile;
+	}
+	private void setCollectionFile(String collectionFile){
+		this.collectionFile = collectionFile;
+	}
 
 	public class PSContext {
 		Map<String,Object> context;
@@ -109,8 +118,7 @@ public class PostmanProcessor extends Script {
 	}
   
 	@Override
-	public void execute(Map<String,Object> context) throws BusinessException {      
-		this.context=context;
+	public void execute(Map<String,Object> parameters) throws BusinessException {
       	
       	//if(args.length<2){
         //    log.warn("usage : java -jar meveoman.jar <collectionFilename> <environmentFilename> [trustAllCertificates]");
@@ -134,7 +142,18 @@ public class PostmanProcessor extends Script {
         //} catch (IOException e) {
         //    e.printStackTrace();
         //}
-      
+      	try{
+			String postmanCollection = new String ( Files.readAllBytes( Paths.get(this.collectionFile)));
+			this.setPostmanJsonCollection(postmanCollection);
+			Map<String,Object> context = new HashMap<>();
+			this.loadEnvironment(enviornmentFile,context);
+			this.runScript(context);
+		} catch (IOException ex){
+			ex.printStackTrace();
+		}
+	}
+
+	private void runScript(Map<String, Object> context){
 		try {
 			jsEngine = new ScriptEngineManager().getEngineByName("graal.js");
 			Bindings bindings = jsEngine.createBindings();
