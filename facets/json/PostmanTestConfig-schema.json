@@ -26,17 +26,6 @@
             "title": "PostmanTestConfig.totalTest",
             "type": "integer"
         },
-        "collectionFilePath": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Postman collection file path",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_PostmanTestConfig_collectionFilePath",
-            "title": "PostmanTestConfig.collectionFilePath",
-            "type": "string",
-            "maxLength": 255
-        },
         "execuationDate": {
             "storages": ["SQL"],
             "nullable": true,
