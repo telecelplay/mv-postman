@@ -40,14 +40,14 @@
   "sourcingRoles" : [ ],
   "mavenDependencies" : [ {
     "groupId" : "org.jboss.resteasy",
+    "artifactId" : "resteasy-multipart-provider",
+    "version" : "4.3.1.Final",
+    "coordinates" : "org.jboss.resteasy:resteasy-multipart-provider:4.3.1.Final"
+  }, {
+    "groupId" : "org.jboss.resteasy",
     "artifactId" : "resteasy-client",
     "version" : "4.3.1.Final",
     "coordinates" : "org.jboss.resteasy:resteasy-client:4.3.1.Final"
-  }, {
-      "groupId" : "org.jboss.resteasy",
-      "artifactId" : "resteasy-multipart-provider",
-      "version" : "4.3.1.Final",
-      "coordinates" : "org.jboss.resteasy:resteasy-multipart-provider:4.3.1.Final"
-  }],
+  } ],
   "importScriptInstances" : [ ]
 }
