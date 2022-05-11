@@ -6,16 +6,6 @@
     "title": "Postman Processor",
     "type": "object",
     "properties": {
-        "failedTest": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Failed Tests",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_PostmanProcessor_failedTest",
-            "title": "PostmanProcessor.failedTest",
-            "type": "integer"
-        },
         "totalTest": {
             "storages": ["SQL"],
             "nullable": true,
