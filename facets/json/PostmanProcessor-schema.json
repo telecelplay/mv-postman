@@ -16,6 +16,17 @@
             "title": "PostmanProcessor.failedTest",
             "type": "integer"
         },
+        "executionDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Test executed at",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanProcessor_executionDate",
+            "title": "PostmanProcessor.executionDate",
+            "type": "string"
+        },
         "collection": {
             "storages": ["SQL"],
             "nullable": true,
