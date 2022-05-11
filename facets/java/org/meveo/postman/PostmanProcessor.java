@@ -155,7 +155,7 @@ public class PostmanProcessor extends Script {
 		}
 	}
 
-	private class PostmanRunnerScript() {
+	private class PostmanRunnerScript {
 		private Map<String, Object> context;
 
 		private void runScript(Map<String, Object> context) {
