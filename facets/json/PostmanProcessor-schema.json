@@ -5,14 +5,26 @@
     "id": "PostmanProcessor",
     "title": "Postman Processor",
     "type": "object",
-    "properties": {"collection": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "description": "Postman collection",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_PostmanProcessor_collection",
-        "title": "PostmanProcessor.collection",
-        "type": "string"
-    }}
+    "properties": {
+        "failedTest": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Failed Tests",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanProcessor_failedTest",
+            "title": "PostmanProcessor.failedTest",
+            "type": "integer"
+        },
+        "collection": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Postman collection",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanProcessor_collection",
+            "title": "PostmanProcessor.collection",
+            "type": "string"
+        }
+    }
 }
