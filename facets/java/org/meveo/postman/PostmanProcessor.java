@@ -30,7 +30,10 @@ public class PostmanProcessor extends Script {
 	
 	final static Logger log = LoggerFactory.getLogger(PostmanProcessor.class);
 
-	private String enviornmentFile;
+  	private int totalTest = 0;
+	private int failedTest = 0;
+	
+  	private String enviornmentFile;
 	private String collectionFile;
 
 	private void setEnviornmentFile(String enviornmentFile){
@@ -147,8 +150,6 @@ public class PostmanProcessor extends Script {
 		//output
 		private int totalRequest = 0;
 		private int failedRequest = 0;
-		private int totalTest = 0;
-		private int failedTest = 0;
 		private Map<String, Object> context;
       
       	private Pattern postmanVarPattern = Pattern.compile("\\{\\{[^\\}]+\\}\\}");
