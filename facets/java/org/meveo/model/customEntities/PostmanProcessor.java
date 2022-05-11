@@ -19,8 +19,6 @@ public class PostmanProcessor implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
-    private String collection;
-
     @Override()
     public String getUuid() {
         return uuid;
@@ -36,14 +34,6 @@ public class PostmanProcessor implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
-    }
-
-    public String getCollection() {
-        return collection;
-    }
-
-    public void setCollection(String collection) {
-        this.collection = collection;
     }
 
     @Override()
