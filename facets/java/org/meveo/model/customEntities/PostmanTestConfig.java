@@ -26,8 +26,6 @@ public class PostmanTestConfig implements CustomEntity {
 
     private String collectionFilePath;
 
-    private String contextFilePath;
-
     private Instant execuationDate;
 
     @Override()
@@ -69,14 +67,6 @@ public class PostmanTestConfig implements CustomEntity {
 
     public void setCollectionFilePath(String collectionFilePath) {
         this.collectionFilePath = collectionFilePath;
-    }
-
-    public String getContextFilePath() {
-        return contextFilePath;
-    }
-
-    public void setContextFilePath(String contextFilePath) {
-        this.contextFilePath = contextFilePath;
     }
 
     public Instant getExecuationDate() {
