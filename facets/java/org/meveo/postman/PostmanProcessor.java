@@ -138,6 +138,8 @@ public class PostmanProcessor extends Script {
         //}
 		PostmanRunnerScript runner  = new PostmanRunnerScript();
       	try{
+          	log.info("collection file path == {}",this.collectionFile);
+          	log.info("environment file path == {}",this.environmentFile);
 			String postmanCollection = new String ( Files.readAllBytes( Paths.get(this.collectionFile)));
           	String postmanEnv = new String ( Files.readAllBytes( Paths.get(this.environmentFile) ) );
 			
