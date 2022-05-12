@@ -3,6 +3,7 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import java.time.Instant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class PostmanTestConfig implements CustomEntity {
@@ -24,6 +25,8 @@ public class PostmanTestConfig implements CustomEntity {
     private Long totalTest;
 
     private String collectionFile;
+
+    private Instant executionDate;
 
     private String environmentFile;
 
@@ -66,6 +69,14 @@ public class PostmanTestConfig implements CustomEntity {
 
     public void setCollectionFile(String collectionFile) {
         this.collectionFile = collectionFile;
+    }
+
+    public Instant getExecutionDate() {
+        return executionDate;
+    }
+
+    public void setExecutionDate(Instant executionDate) {
+        this.executionDate = executionDate;
     }
 
     public String getEnvironmentFile() {
