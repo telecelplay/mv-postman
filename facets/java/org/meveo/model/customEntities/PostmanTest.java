@@ -22,6 +22,8 @@ public class PostmanTest implements CustomEntity {
 
     private String endpoint;
 
+    private String methodType;
+
     private String requestBody;
 
     private String testResponse;
@@ -52,6 +54,14 @@ public class PostmanTest implements CustomEntity {
 
     public void setEndpoint(String endpoint) {
         this.endpoint = endpoint;
+    }
+
+    public String getMethodType() {
+        return methodType;
+    }
+
+    public void setMethodType(String methodType) {
+        this.methodType = methodType;
     }
 
     public String getRequestBody() {
