@@ -3,6 +3,7 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class PostmanTest implements CustomEntity {
@@ -20,6 +21,9 @@ public class PostmanTest implements CustomEntity {
     private DBStorageType storages;
 
     private String endpoint;
+
+    @JsonProperty(required = true)
+    private String testRequestId;
 
     @Override()
     public String getUuid() {
@@ -44,6 +48,14 @@ public class PostmanTest implements CustomEntity {
 
     public void setEndpoint(String endpoint) {
         this.endpoint = endpoint;
+    }
+
+    public String getTestRequestId() {
+        return testRequestId;
+    }
+
+    public void setTestRequestId(String testRequestId) {
+        this.testRequestId = testRequestId;
     }
 
     @Override()
