@@ -15,7 +15,7 @@
   "contentTypes" : [ ],
   "fileExtensions" : [ ],
   "saveOnExplorer" : false,
-  "guiPosition" : "tab:Postman Test:0;field:4",
+  "guiPosition" : "tab:Postman Test:0;field:5",
   "identifier" : false,
   "storages" : [ "SQL" ],
   "samples" : [ ],
