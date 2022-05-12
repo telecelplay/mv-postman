@@ -38,16 +38,6 @@
             "title": "PostmanTest.requestBody",
             "type": "string"
         },
-        "testResponse": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Test Response",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_PostmanTest_testResponse",
-            "title": "PostmanTest.testResponse",
-            "type": "string"
-        },
         "responseCode": {
             "storages": ["SQL"],
             "nullable": true,
