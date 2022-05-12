@@ -19,6 +19,8 @@ public class PostmanTest implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private String endpoint;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -34,6 +36,14 @@ public class PostmanTest implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public String getEndpoint() {
+        return endpoint;
+    }
+
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
     }
 
     @Override()
