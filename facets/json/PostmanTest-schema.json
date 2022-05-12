@@ -17,6 +17,16 @@
             "type": "string",
             "maxLength": 255
         },
+        "requestBody": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Test Request Body",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanTest_requestBody",
+            "title": "PostmanTest.requestBody",
+            "type": "string"
+        },
         "testRequestId": {
             "storages": ["SQL"],
             "nullable": false,
