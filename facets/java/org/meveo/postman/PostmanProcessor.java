@@ -26,6 +26,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Map;
+import java.time.Instant;
 
 import org.meveo.service.script.Script;
 import org.meveo.admin.exception.BusinessException;
@@ -142,6 +143,7 @@ public class PostmanProcessor extends Script {
           	PostmanTestConfig config = new PostmanTestConfig();
           	config.setEnvironmentFile(postmanEnv);
           	config.setCollectionFile(postmanCollection);
+          	config.setExecutionDate(Instant.now());
           	crossStorageApi.createOrUpdate(defaultRepo, config);	
           
 			runner.setPostmanJsonCollection(postmanCollection);
