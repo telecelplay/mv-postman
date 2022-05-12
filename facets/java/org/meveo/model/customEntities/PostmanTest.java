@@ -19,7 +19,17 @@ public class PostmanTest implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private String testConfigId;
+
+    private String endpoint;
+
+    private String methodType;
+
+    private String requestBody;
+
     private String response;
+
+    private String responseStatus;
 
     @Override()
     public String getUuid() {
@@ -38,12 +48,52 @@ public class PostmanTest implements CustomEntity {
         this.storages = storages;
     }
 
+    public String getTestConfigId() {
+        return testConfigId;
+    }
+
+    public void setTestConfigId(String testConfigId) {
+        this.testConfigId = testConfigId;
+    }
+
+    public String getEndpoint() {
+        return endpoint;
+    }
+
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
+    }
+
+    public String getMethodType() {
+        return methodType;
+    }
+
+    public void setMethodType(String methodType) {
+        this.methodType = methodType;
+    }
+
+    public String getRequestBody() {
+        return requestBody;
+    }
+
+    public void setRequestBody(String requestBody) {
+        this.requestBody = requestBody;
+    }
+
     public String getResponse() {
         return response;
     }
 
     public void setResponse(String response) {
         this.response = response;
+    }
+
+    public String getResponseStatus() {
+        return responseStatus;
+    }
+
+    public void setResponseStatus(String responseStatus) {
+        this.responseStatus = responseStatus;
     }
 
     @Override()
