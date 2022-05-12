@@ -150,7 +150,7 @@ public class PostmanProcessor extends Script {
 			runner.setPostmanJsonCollection(postmanCollection);
 			Map<String,Object> context = new HashMap<>();
 			this.loadEnvironment(postmanEnv,context);
-			runner.runScript(context);
+			runner.runScript(config.getUuid(),context);
 		} catch (IOException ex){
 			ex.printStackTrace();
 		}
@@ -166,6 +166,7 @@ public class PostmanProcessor extends Script {
 		private int totalRequest = 0;
 		private int failedRequest = 0;
 		private Map<String, Object> context;
+      	private String configId;
       
       	private Pattern postmanVarPattern = Pattern.compile("\\{\\{[^\\}]+\\}\\}");
 		private ScriptEngine jsEngine;
@@ -174,9 +175,10 @@ public class PostmanProcessor extends Script {
 		private List<String> failedRequestName = new ArrayList<>();
 		private List<String> failedTestName = new ArrayList<>();
 
-		private void runScript(Map<String, Object> context) {
+		private void runScript(String configId, Map<String, Object> context) {
 			try {
 				this.context = context;
+              	this.configId = configId;
 				jsEngine = new ScriptEngineManager().getEngineByName("graal.js");
 				Bindings bindings = jsEngine.createBindings();
 				bindings.put("polyglot.js.allowAllAccess", true);
@@ -270,6 +272,7 @@ public class PostmanProcessor extends Script {
 			String rawUrl = (String) url.get("raw");
 			String resolvedUrl = replaceVars(rawUrl);
 			System.out.println("calling :" + resolvedUrl);
+          	postmanTest.setTestConfigId(configId);
           	postmanTest.setEndpoint(resolvedUrl);
           
 			WebTarget target = client.target(resolvedUrl);
