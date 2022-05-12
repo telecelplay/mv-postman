@@ -24,6 +24,8 @@ public class PostmanTest implements CustomEntity {
 
     private String requestBody;
 
+    private String testResponse;
+
     @JsonProperty(required = true)
     private String testRequestId;
 
@@ -58,6 +60,14 @@ public class PostmanTest implements CustomEntity {
 
     public void setRequestBody(String requestBody) {
         this.requestBody = requestBody;
+    }
+
+    public String getTestResponse() {
+        return testResponse;
+    }
+
+    public void setTestResponse(String testResponse) {
+        this.testResponse = testResponse;
     }
 
     public String getTestRequestId() {
