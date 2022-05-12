@@ -4,5 +4,16 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "PostmanTest",
     "title": "Postman Test",
-    "type": "object"
+    "type": "object",
+    "properties": {"endpoint": {
+        "storages": ["SQL"],
+        "nullable": true,
+        "description": "Test Endpoint",
+        "readOnly": false,
+        "versionable": false,
+        "id": "CE_PostmanTest_endpoint",
+        "title": "PostmanTest.endpoint",
+        "type": "string",
+        "maxLength": 255
+    }}
 }
