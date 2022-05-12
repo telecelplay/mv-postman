@@ -5,15 +5,30 @@
     "id": "PostmanTest",
     "title": "Postman Test",
     "type": "object",
-    "properties": {"endpoint": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "description": "Test Endpoint",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_PostmanTest_endpoint",
-        "title": "PostmanTest.endpoint",
-        "type": "string",
-        "maxLength": 255
-    }}
+    "properties": {
+        "endpoint": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Test Endpoint",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanTest_endpoint",
+            "title": "PostmanTest.endpoint",
+            "type": "string",
+            "maxLength": 255
+        },
+        "testRequestId": {
+            "storages": ["SQL"],
+            "nullable": false,
+            "minLength": 1,
+            "description": "Postman Test ID FK",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanTest_testRequestId",
+            "title": "PostmanTest.testRequestId",
+            "type": "string",
+            "maxLength": 255
+        }
+    },
+    "required": ["testRequestId"]
 }
