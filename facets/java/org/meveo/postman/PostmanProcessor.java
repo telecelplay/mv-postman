@@ -45,10 +45,10 @@ public class PostmanProcessor extends Script {
   	private String environmentFile;
 	private String collectionFile;
 
-	private void setEnvironmentFile(String environmentFile){
+	public void setEnvironmentFile(String environmentFile){
 		this.environmentFile = environmentFile;
 	}
-	private void setCollectionFile(String collectionFile){
+	public void setCollectionFile(String collectionFile){
 		this.collectionFile = collectionFile;
 	}
 
