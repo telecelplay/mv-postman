@@ -5,29 +5,14 @@
     "id": "PostmanTest",
     "title": "Postman Test",
     "type": "object",
-    "properties": {
-        "response": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Test Response",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_PostmanTest_response",
-            "title": "PostmanTest.response",
-            "type": "string"
-        },
-        "testRequestId": {
-            "storages": ["SQL"],
-            "nullable": false,
-            "minLength": 1,
-            "description": "Postman Test ID FK",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_PostmanTest_testRequestId",
-            "title": "PostmanTest.testRequestId",
-            "type": "string",
-            "maxLength": 255
-        }
-    },
-    "required": ["testRequestId"]
+    "properties": {"response": {
+        "storages": ["SQL"],
+        "nullable": true,
+        "description": "Test Response",
+        "readOnly": false,
+        "versionable": false,
+        "id": "CE_PostmanTest_response",
+        "title": "PostmanTest.response",
+        "type": "string"
+    }}
 }
