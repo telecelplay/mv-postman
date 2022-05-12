@@ -20,8 +20,6 @@ public class PostmanTest implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
-    private String requestBody;
-
     private String response;
 
     @JsonProperty(required = true)
@@ -42,14 +40,6 @@ public class PostmanTest implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
-    }
-
-    public String getRequestBody() {
-        return requestBody;
-    }
-
-    public void setRequestBody(String requestBody) {
-        this.requestBody = requestBody;
     }
 
     public String getResponse() {
