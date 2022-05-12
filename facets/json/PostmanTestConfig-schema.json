@@ -45,17 +45,6 @@
             "id": "CE_PostmanTestConfig_environmentFile",
             "title": "PostmanTestConfig.environmentFile",
             "type": "string"
-        },
-        "execuationDate": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "format": "date-time",
-            "description": "Postman collection execution date",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_PostmanTestConfig_execuationDate",
-            "title": "PostmanTestConfig.execuationDate",
-            "type": "string"
         }
     }
 }
