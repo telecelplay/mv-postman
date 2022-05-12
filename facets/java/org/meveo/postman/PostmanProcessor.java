@@ -364,7 +364,7 @@ public class PostmanProcessor extends Script {
 				throw new ScriptException("invalid request type : " + request.get("method"));
 			}
 			log.debug("response status :" + response.getStatus());
-          	//postmanTest.setResponseCode(""+response.getStatus());
+          	postmanTest.setResponseStatus(""+response.getStatus());
           	postmanTest.setMethodType((String)request.get("method"));
           
 			jsEngine.getContext().setAttribute("req_status", response.getStatus(), ScriptContext.GLOBAL_SCOPE);
@@ -375,7 +375,7 @@ public class PostmanProcessor extends Script {
 			cookieRegister.addCookiesFromResponse(response);
 			String value = response.readEntity(String.class);
 			log.info("response  :" + value);
-          	//postmanTest.setResponse(value);
+          	postmanTest.setResponse(value);
 			response.close();
 			jsEngine.getContext().setAttribute("req_response", value, ScriptContext.GLOBAL_SCOPE);
 		}
