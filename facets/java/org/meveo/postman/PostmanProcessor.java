@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.meveo.model.customEntities.PostmanTestConfig;
+import org.meveo.model.customEntities.PostmanTest;
 import org.meveo.service.storage.RepositoryService;
 import org.meveo.model.storage.Repository;
 import org.meveo.api.persistence.CrossStorageApi;
@@ -263,11 +264,14 @@ public class PostmanProcessor extends Script {
 			client.register(new LoggingFilter());
 
 			Map<String, Object> request = (Map<String, Object>) item.get("request");
+          	PostmanTest postmanTest = new PostmanTest();
 
 			Map<String, Object> url = (Map<String, Object>) request.get("url");
 			String rawUrl = (String) url.get("raw");
 			String resolvedUrl = replaceVars(rawUrl);
 			System.out.println("calling :" + resolvedUrl);
+          	postmanTest.setEndpoint(resolvedUrl);
+          
 			WebTarget target = client.target(resolvedUrl);
 			Invocation.Builder requestBuilder = target.request();
 			if (request.containsKey("auth")) {
@@ -360,6 +364,9 @@ public class PostmanProcessor extends Script {
 				throw new ScriptException("invalid request type : " + request.get("method"));
 			}
 			log.debug("response status :" + response.getStatus());
+          	//postmanTest.setResponseCode(""+response.getStatus());
+          	postmanTest.setMethodType((String)request.get("method"));
+          
 			jsEngine.getContext().setAttribute("req_status", response.getStatus(), ScriptContext.GLOBAL_SCOPE);
 			if (response.getStatus() >= 300) {
 				response.close();
@@ -368,6 +375,7 @@ public class PostmanProcessor extends Script {
 			cookieRegister.addCookiesFromResponse(response);
 			String value = response.readEntity(String.class);
 			log.info("response  :" + value);
+          	//postmanTest.setResponse(value);
 			response.close();
 			jsEngine.getContext().setAttribute("req_response", value, ScriptContext.GLOBAL_SCOPE);
 		}
