@@ -3,7 +3,7 @@
   "name" : "Postman Test",
   "description" : "Postman test detail",
   "customEntityCategoryCode" : "Automation",
-  "availableStorages" : [ ],
+  "availableStorages" : [ "SQL" ],
   "sqlStorageConfiguration" : {
     "storeAsTable" : true
   },
