@@ -20,11 +20,11 @@ public class PostmanTest implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
-    private String endpoint;
-
     private String methodType;
 
     private String requestBody;
+
+    private String response;
 
     @JsonProperty(required = true)
     private String testRequestId;
@@ -46,14 +46,6 @@ public class PostmanTest implements CustomEntity {
         this.storages = storages;
     }
 
-    public String getEndpoint() {
-        return endpoint;
-    }
-
-    public void setEndpoint(String endpoint) {
-        this.endpoint = endpoint;
-    }
-
     public String getMethodType() {
         return methodType;
     }
@@ -68,6 +60,14 @@ public class PostmanTest implements CustomEntity {
 
     public void setRequestBody(String requestBody) {
         this.requestBody = requestBody;
+    }
+
+    public String getResponse() {
+        return response;
+    }
+
+    public void setResponse(String response) {
+        this.response = response;
     }
 
     public String getTestRequestId() {
