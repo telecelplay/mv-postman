@@ -356,6 +356,7 @@ public class PostmanProcessor extends Script {
 				} else {
 					response = requestBuilder.put(entity);
 				}
+              	postmanTest.setRequestBody(entity.toString());
 			} else if ("DELETE".equals(request.get("method"))) {
 				response = requestBuilder.delete();
 			}
