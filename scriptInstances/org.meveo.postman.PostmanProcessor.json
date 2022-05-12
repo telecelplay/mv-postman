@@ -1,7 +1,13 @@
 {
   "code" : "org.meveo.postman.PostmanProcessor",
   "description" : "Execute postman scripts",
-  "inputs" : [ ],
+  "inputs" : [ {
+    "name" : "environmentFile",
+    "type" : "String"
+  }, {
+    "name" : "collectionFile",
+    "type" : "String"
+  } ],
   "outputs" : [ ],
   "generateOutputs" : false,
   "type" : "JAVA",
