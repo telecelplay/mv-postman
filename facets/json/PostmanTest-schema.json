@@ -6,17 +6,6 @@
     "title": "Postman Test",
     "type": "object",
     "properties": {
-        "endpoint": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Test Endpoint",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_PostmanTest_endpoint",
-            "title": "PostmanTest.endpoint",
-            "type": "string",
-            "maxLength": 255
-        },
         "methodType": {
             "storages": ["SQL"],
             "nullable": true,
@@ -36,6 +25,16 @@
             "versionable": false,
             "id": "CE_PostmanTest_requestBody",
             "title": "PostmanTest.requestBody",
+            "type": "string"
+        },
+        "response": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Test Response",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanTest_response",
+            "title": "PostmanTest.response",
             "type": "string"
         },
         "testRequestId": {
