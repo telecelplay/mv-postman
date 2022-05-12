@@ -6,17 +6,6 @@
     "title": "Postman Test",
     "type": "object",
     "properties": {
-        "methodType": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Test Method Type",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_PostmanTest_methodType",
-            "title": "PostmanTest.methodType",
-            "type": "string",
-            "maxLength": 255
-        },
         "requestBody": {
             "storages": ["SQL"],
             "nullable": true,
