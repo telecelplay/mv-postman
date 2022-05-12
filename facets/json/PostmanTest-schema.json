@@ -5,14 +5,70 @@
     "id": "PostmanTest",
     "title": "Postman Test",
     "type": "object",
-    "properties": {"response": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "description": "Test Response",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_PostmanTest_response",
-        "title": "PostmanTest.response",
-        "type": "string"
-    }}
+    "properties": {
+        "testConfigId": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Postman Test Config Id",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanTest_testConfigId",
+            "title": "PostmanTest.testConfigId",
+            "type": "string",
+            "maxLength": 255
+        },
+        "endpoint": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Test Endpoint",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanTest_endpoint",
+            "title": "PostmanTest.endpoint",
+            "type": "string",
+            "maxLength": 255
+        },
+        "methodType": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Test Method Type",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanTest_methodType",
+            "title": "PostmanTest.methodType",
+            "type": "string",
+            "maxLength": 255
+        },
+        "requestBody": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Test Request Body",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanTest_requestBody",
+            "title": "PostmanTest.requestBody",
+            "type": "string"
+        },
+        "response": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Test Response",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanTest_response",
+            "title": "PostmanTest.response",
+            "type": "string"
+        },
+        "responseStatus": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Response Status Code",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanTest_responseStatus",
+            "title": "PostmanTest.responseStatus",
+            "type": "string",
+            "maxLength": 255
+        }
+    }
 }
