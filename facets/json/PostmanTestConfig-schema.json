@@ -36,6 +36,17 @@
             "title": "PostmanTestConfig.collectionFile",
             "type": "string"
         },
+        "executionDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Execution Date",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PostmanTestConfig_executionDate",
+            "title": "PostmanTestConfig.executionDate",
+            "type": "string"
+        },
         "environmentFile": {
             "storages": ["SQL"],
             "nullable": true,
