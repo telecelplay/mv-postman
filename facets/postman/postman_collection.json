@@ -1,0 +1,120 @@
+{
+	"info": {
+		"_postman_id": "f929d56e-33da-46ec-b8f4-b5ad7425ab65",
+		"name": "Postman collection test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login and init var",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "033626ad-c9e4-46b0-8db2-4580f9764dc0",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.environment.get(\"variable_key\");",
+							"var json = pm.response.json();",
+							"var token = json[\"access_token\"];",
+							"var refreshToken = json[\"refresh_token\"]",
+							"pm.environment.set(\"access_token\", token);",
+							"pm.environment.set(\"refresh_token\", refreshToken);",
+							"",
+							"",
+							"pm.environment.set(\"user1_wallet\", \"540393827f402ab70d283a7706231b5cef8fec0c\");",
+							"pm.environment.set(\"user2_wallet\", \"87bebc4094bc195e97e431f25f86c246c0ed6608\");",
+							"pm.environment.set(\"user3_wallet\", \"a3fce546963eccaea1c3d87b72c0612fa22d1a91\");",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "client_id",
+							"value": "meveo-web",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "meveo.admin",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "{{keycloakPassword}}",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "afe07e5a-68cb-4fb0-8b75-5b6053b07dc3",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{protocol}}://{{keycloak.hostname}}:{{keycloak.port}}/auth/realms/{{webContext}}/protocol/openid-connect/token",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{keycloak.hostname}}"
+					],
+					"port": "{{keycloak.port}}",
+					"path": [
+						"auth",
+						"realms",
+						"{{webContext}}",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				},
+				"description": "Request Keycloak and get auth token"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "167c7ef2-7a84-4c38-b1e3-eab901feef4a",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "8c189efe-d41a-4115-bc20-745bfb13b938",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
