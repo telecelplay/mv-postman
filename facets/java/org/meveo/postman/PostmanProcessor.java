@@ -384,6 +384,11 @@ public class PostmanProcessor extends Script {
           	postmanTest.setResponse(value);
 			response.close();
 			jsEngine.getContext().setAttribute("req_response", value, ScriptContext.GLOBAL_SCOPE);
+          	try{
+               crossStorageApi.createOrUpdate(defaultRepo, postmanTest);
+            } catch(Exception ex){
+              log.error(ex.getMessage());
+            }
 		}
 
 		public String replaceVars(String input) {
