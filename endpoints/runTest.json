@@ -1,0 +1,26 @@
+{
+  "code" : "runTest",
+  "description" : "Run Postman Collection",
+  "secured" : true,
+  "checkPathParams" : true,
+  "serviceCode" : "org.meveo.postman.PostmanProcessor",
+  "synchronous" : true,
+  "method" : "POST",
+  "parameterMappings" : [ {
+    "serviceParameter" : "environmentFile",
+    "multivalued" : false,
+    "parameterName" : "environmentFile",
+    "valueRequired" : false
+  }, {
+    "serviceParameter" : "collectionFile",
+    "multivalued" : false,
+    "parameterName" : "collectionFile",
+    "valueRequired" : false
+  } ],
+  "pathParameters" : [ ],
+  "roles" : [ ],
+  "serializeResult" : false,
+  "contentType" : "application/json",
+  "basePath" : "postman",
+  "path" : "/test/run"
+}
