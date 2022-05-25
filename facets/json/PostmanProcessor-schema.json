@@ -1,8 +1,0 @@
-{
-    "storages": ["SQL"],
-    "default": "Postman Test Scripts Results",
-    "$schema": "http://json-schema.org/draft-07/schema",
-    "id": "PostmanProcessor",
-    "title": "Postman Processor",
-    "type": "object"
-}
