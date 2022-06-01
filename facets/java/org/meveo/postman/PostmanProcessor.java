@@ -12,13 +12,19 @@ import org.slf4j.LoggerFactory;
 import org.meveo.model.customEntities.PostmanTestConfig;
 import org.meveo.model.customEntities.PostmanTest;
 import org.meveo.service.storage.RepositoryService;
+import org.meveo.service.crm.impl.CurrentUserProducer;
+import org.meveo.service.admin.impl.MeveoModuleService;
 import org.meveo.model.storage.Repository;
 import org.meveo.api.persistence.CrossStorageApi;
+import org.meveo.service.git.GitHelper;
+import org.meveo.security.MeveoUser;
+
 
 import javax.script.*;
 
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.*;
+import javax.script.*;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -32,12 +38,19 @@ import java.time.Instant;
 import org.meveo.service.script.Script;
 import org.meveo.admin.exception.BusinessException;
 
+import com.oracle.truffle.js.scriptengine.GraalJSScriptEngine;
+import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.Engine;
+import org.graalvm.polyglot.HostAccess;
+
 public class PostmanProcessor extends Script {
 	
 	private final static Logger log = LoggerFactory.getLogger(PostmanProcessor.class);
   	private CrossStorageApi crossStorageApi = getCDIBean(CrossStorageApi.class);
 	private RepositoryService repositoryService = getCDIBean(RepositoryService.class);
+    private MeveoModuleService moduleService = getCDIBean(MeveoModuleService.class);
 	private Repository defaultRepo = repositoryService.findDefaultRepository();
+    private CurrentUserProducer currentUserProducer = getCDIBean(CurrentUserProducer.class);
 
   	private int totalTest = 0;
 	private int failedTest = 0;
@@ -99,6 +112,7 @@ public class PostmanProcessor extends Script {
 		Map<String, Object> map = mapper.readValue(postmanEnv, Map.class);
 		log.info("load Postman environment "+map.get("name"));
 		ArrayList<Object> values = (ArrayList<Object>)map.get("values");
+        
 		for(Object rawValue : values) {
 			Map<String, Object> value = (Map<String, Object>) rawValue;
 			Boolean enabled = (Boolean)value.get("enabled");
@@ -140,9 +154,25 @@ public class PostmanProcessor extends Script {
       	try{
           	log.info("collection file path == {}",this.collectionFile);
           	log.info("environment file path == {}",this.environmentFile);
-			String postmanCollection = new String ( Files.readAllBytes( Paths.get(this.collectionFile)));
-          	String postmanEnv = new String ( Files.readAllBytes( Paths.get(this.environmentFile) ) );
-			
+          
+            MeveoUser user = currentUserProducer.getCurrentUser();
+            java.io.File modulePathDoc = GitHelper.getRepositoryDir(user,"mv-postman");
+            if(modulePathDoc == null){
+                throw new BusinessException("cannot load postman collection, module directory not found");
+            }
+            
+            String envFilePath = modulePathDoc.getPath()+ this.environmentFile;
+            String collFilePath = modulePathDoc.getPath()+ this.collectionFile;
+              
+            log.info("pm environment file path == "+envFilePath );
+            log.info("pm collection file path == "+collFilePath );
+              
+            String postmanCollection = new String ( Files.readAllBytes( Paths.get( collFilePath )));
+          	String postmanEnv = new String ( Files.readAllBytes( Paths.get( envFilePath )));
+             
+            log.info("postmanCollection="+postmanCollection);
+            log.info("postmanEnv="+postmanEnv);
+            
           	PostmanTestConfig config = new PostmanTestConfig();
           	config.setEnvironmentFile(postmanEnv);
           	config.setCollectionFile(postmanCollection);
@@ -153,7 +183,8 @@ public class PostmanProcessor extends Script {
 			Map<String,Object> context = new HashMap<>();
 			this.loadEnvironment(postmanEnv,context);
 			runner.runScript(config.getUuid(),context);
-		} catch (IOException ex){
+          
+		} catch (Exception ex){
 			ex.printStackTrace();
 		}
 	}
@@ -177,11 +208,26 @@ public class PostmanProcessor extends Script {
 		private List<String> failedRequestName = new ArrayList<>();
 		private List<String> failedTestName = new ArrayList<>();
 
-		private void runScript(String configId, Map<String, Object> context) {
+		private void runScript(String configId, Map<String, Object> context) throws BusinessException{
 			try {
 				this.context = context;
               	this.configId = configId;
-				jsEngine = new ScriptEngineManager().getEngineByName("graal.js");
+                ScriptEngineManager scriptManager = new ScriptEngineManager();
+              
+              
+                log.info("scriptManager = {}",scriptManager);
+				//jsEngine = scriptManager.getEngineByName("graal.js");
+                jsEngine = GraalJSScriptEngine.create(null,
+                Context.newBuilder("js")
+                        .allowHostAccess(HostAccess.ALL)
+                        .allowHostClassLookup(s -> true)
+                        .option("js.ecmascript-version", "2021"));
+                log.info("jsEngine = {}",jsEngine);
+              
+              
+                if (jsEngine == null){    				
+    				throw new BusinessException("Graal.js not found");
+				}
 				Bindings bindings = jsEngine.createBindings();
 				bindings.put("polyglot.js.allowAllAccess", true);
 				context.forEach((k, v) -> {
