@@ -1,7 +1,8 @@
 package org.meveo.postman;
 
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
-import org.jboss.resteasy.client.jaxrs.internal.ResteasyClientBuilderImpl;
+import org.jboss.resteasy.client.jaxrs.ResteasyClient;
+import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -38,7 +39,6 @@ import java.time.Instant;
 import org.meveo.service.script.Script;
 import org.meveo.admin.exception.BusinessException;
 
-import com.oracle.truffle.js.scriptengine.GraalJSScriptEngine;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Engine;
 import org.graalvm.polyglot.HostAccess;
@@ -120,7 +120,7 @@ public class PostmanProcessor extends Script {
 				String key=(String)value.get("key");
 				Object val=value.get("value");
 				context.put(key,val);
-				log.debug("Added "+key+" => "+val+ " to context");
+				log.info("Added "+key+" => "+val+ " to context");
 			}
 		}
 	}
@@ -128,29 +128,9 @@ public class PostmanProcessor extends Script {
 	@Override
 	public void execute(Map<String,Object> parameters) throws BusinessException {
       	
-      	//if(args.length<2){
-        //    log.warn("usage : java -jar meveoman.jar <collectionFilename> <environmentFilename> [trustAllCertificates]");
-        //    System.out.println("  <collectionFilename>: filename (including path) of the postman 2.1 collection json file.");
-        //    System.out.println("  <environmentFilename>: filename (including path) the postmane environment json file to load and initialize the context.");
-        //    System.out.println("  trustAllCertificates: if this param is set then ssl certificates are not checked.");
-        //}
-      
-        //PostmanRunnerScript runner  = new PostmanRunnerScript();
-        //System.out.println("Load collection "+args[0]+ " and init context with env file "+args[1]);
-        //try {
-            //String postmanCollection = new String ( Files.readAllBytes( Paths.get(args[0]) ) );
-            //runner.setPostmanJsonCollection(postmanCollection);
-            //runner.setStopOnError(true);
-            //if(args.length==3 && "trustAllCertificates".equals(args[2])) {
-            //    runner.setTrustAllCertificates(true);
-            //}
-            //Map<String,Object> context = new HashMap<>();
-            //runner.loadEnvironment(args[1],context);
-            //runner.execute(context);
-        //} catch (IOException e) {
-        //    e.printStackTrace();
-        //}
+      	
 		PostmanRunnerScript runner  = new PostmanRunnerScript();
+      
       	try{
           	log.info("collection file path == {}",this.collectionFile);
           	log.info("environment file path == {}",this.environmentFile);
@@ -170,19 +150,23 @@ public class PostmanProcessor extends Script {
             String postmanCollection = new String ( Files.readAllBytes( Paths.get( collFilePath )));
           	String postmanEnv = new String ( Files.readAllBytes( Paths.get( envFilePath )));
              
-            log.info("postmanCollection="+postmanCollection);
-            log.info("postmanEnv="+postmanEnv);
+            log.debug("postmanCollection="+postmanCollection);
+            log.debug("postmanEnv="+postmanEnv);
             
           	PostmanTestConfig config = new PostmanTestConfig();
           	config.setEnvironmentFile(postmanEnv);
           	config.setCollectionFile(postmanCollection);
           	config.setExecutionDate(Instant.now());
-          	crossStorageApi.createOrUpdate(defaultRepo, config);	
-          
+          	String uuId = crossStorageApi.createOrUpdate(defaultRepo, config);	
+            config.setUuid(uuId);
+            log.info("PostmanTestConfig.uuId = "+config.getUuid());
+                      
 			runner.setPostmanJsonCollection(postmanCollection);
 			Map<String,Object> context = new HashMap<>();
-			this.loadEnvironment(postmanEnv,context);
+			this.loadEnvironment(postmanEnv,context);            
 			runner.runScript(config.getUuid(),context);
+          
+          
           
 		} catch (Exception ex){
 			ex.printStackTrace();
@@ -214,19 +198,19 @@ public class PostmanProcessor extends Script {
               	this.configId = configId;
                 ScriptEngineManager scriptManager = new ScriptEngineManager();
               
+                log.debug("scriptManager = {}",scriptManager);
               
-                log.info("scriptManager = {}",scriptManager);
-				//jsEngine = scriptManager.getEngineByName("graal.js");
-                jsEngine = GraalJSScriptEngine.create(null,
+				jsEngine = scriptManager.getEngineByName("js");
                 Context.newBuilder("js")
                         .allowHostAccess(HostAccess.ALL)
                         .allowHostClassLookup(s -> true)
-                        .option("js.ecmascript-version", "2021"));
-                log.info("jsEngine = {}",jsEngine);
+                        .option("js.ecmascript-version", "2021");
+              
+                log.debug("jsEngine = {}",jsEngine);
               
               
                 if (jsEngine == null){    				
-    				throw new BusinessException("Graal.js not found");
+    				throw new BusinessException("js not found");
 				}
 				Bindings bindings = jsEngine.createBindings();
 				bindings.put("polyglot.js.allowAllAccess", true);
@@ -251,8 +235,9 @@ public class PostmanProcessor extends Script {
 				ObjectMapper mapper = new ObjectMapper();
 				Map<String, Object> map = mapper.readValue(postmanJsonCollection, Map.class);
 				Map<String, Object> info = (Map<String, Object>) map.get("info");
-				log.info("executing collection :" + info.get("name"));
-				ArrayList<Object> items = (ArrayList<Object>) map.get("item");
+				log.debug("executing collection :" + info.get("name"));
+				ArrayList<Object> items = (ArrayList<Object>) map.get("item");                
+                //items.forEach(i->log.info(i.toString()));
 				executeItemList(items);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -261,8 +246,10 @@ public class PostmanProcessor extends Script {
 
 		private void executeItemList(ArrayList<Object> items) {
 			log.debug("items  :" + items.size());
+            log.info("items[0]="+items.get(0));
 			for (Object rawItem : items) {
 				Map<String, Object> item = (Map<String, Object>) rawItem;
+                item.keySet().forEach(k->log.info(k.toString()));
 				boolean isSection = item.containsKey("item");
 				log.info("executing " + (isSection ? "section" : "test") + " :" + item.get("name"));
 				try {
@@ -277,6 +264,7 @@ public class PostmanProcessor extends Script {
 						totalRequest++;
 						executeItem(item);
 					}
+                  	
 					if (events != null) {
 						executeEvent((String) item.get("name"), "test", events);
 					}
@@ -303,12 +291,14 @@ public class PostmanProcessor extends Script {
 
 
 		private void executeItem(Map<String, Object> item) throws ScriptException {
-			log.debug("executing item :" + item.get("name"));
-			ResteasyClientBuilder builder = new ResteasyClientBuilderImpl();
+			log.info("executing item :" + item.get("name"));
+          	ResteasyClient client = null;
+          
 			if (trustAllCertificates) {
-				builder.disableTrustManager();
-			}
-			Client client = builder.build();
+                client = new ResteasyClientBuilder().disableTrustManager().build();
+			}else{
+                client = new ResteasyClientBuilder().build();
+            }			
 
 			client.register(cookieRegister);
 			client.register(new LoggingFilter());
@@ -320,10 +310,10 @@ public class PostmanProcessor extends Script {
 			String rawUrl = (String) url.get("raw");
 			String resolvedUrl = replaceVars(rawUrl);
 			System.out.println("calling :" + resolvedUrl);
-          	postmanTest.setTestConfigId(configId);
-          	postmanTest.setEndpoint(resolvedUrl);
-          
-			WebTarget target = client.target(resolvedUrl);
+          	postmanTest.setTestConfigId(this.configId);
+          	postmanTest.setEndpoint(resolvedUrl);          
+
+            ResteasyWebTarget target = client.target(resolvedUrl);
 			Invocation.Builder requestBuilder = target.request();
 			if (request.containsKey("auth")) {
 				Map<String, Object> auth = (Map<String, Object>) request.get("auth");
@@ -334,9 +324,10 @@ public class PostmanProcessor extends Script {
 						log.info("Set bearer token to " + token);
 						requestBuilder.header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
 						break;
-					case "basic":
+					case "basic":                        
 						String password = replaceVars((String) getValueByKey("password", (ArrayList<Object>) auth.get("basic")));
 						String username = replaceVars((String) getValueByKey("username", (ArrayList<Object>) auth.get("basic")));
+                        log.debug("Basic Authentication for userName =" + username+"  and password ="+password);
 						byte[] encodedAuth = Base64.encodeBase64((username + ":" + password).getBytes(Charset.forName("ISO-8859-1")));
 						requestBuilder.header(HttpHeaders.AUTHORIZATION, "Basic " + new String(encodedAuth));
 				}
@@ -346,7 +337,7 @@ public class PostmanProcessor extends Script {
 				for (Object rawParam : headers) {
 					Map<String, Object> param = (Map<String, Object>) rawParam;
 					String val = replaceVars((String) param.get("value"));
-					log.info("add header " + param.get("key") + " = " + val);
+					log.debug("add header " + param.get("key") + " = " + val);
 					requestBuilder.header((String) param.get("key"), val);
 				}
 			}
@@ -357,10 +348,12 @@ public class PostmanProcessor extends Script {
 				Entity<?> entity = null;
 				Map<String, Object> body = (Map<String, Object>) request.get("body");
 				if ("urlencoded".equals(body.get("mode"))) {
+                    log.debug("method=POST ");
 					ArrayList<Object> formdata = (ArrayList<Object>) body.get("urlencoded");
 					Form form = new Form();
 					for (Object rawParam : formdata) {
 						Map<String, Object> param = (Map<String, Object>) rawParam;
+                        log.debug("form parameter key="+((String) param.get("key"))+" and Value assigned = "+replaceVars((String) param.get("value")));
 						form.param((String) param.get("key"), replaceVars((String) param.get("value")));
 					}
 					entity = Entity.form(form);
@@ -402,8 +395,11 @@ public class PostmanProcessor extends Script {
 					}
 					entity = Entity.entity(mdo, MediaType.MULTIPART_FORM_DATA_TYPE);
 				}
+                log.info("Request Body looks like =>"+entity.toString());
 				if ("POST".equals(request.get("method"))) {
+                    log.debug("Just before making a post call");
 					response = requestBuilder.post(entity);
+                    log.debug("Just after making a call");
 				} else {
 					response = requestBuilder.put(entity);
 				}
@@ -415,9 +411,10 @@ public class PostmanProcessor extends Script {
 				response.close();
 				throw new ScriptException("invalid request type : " + request.get("method"));
 			}
-			log.debug("response status :" + response.getStatus());
+			log.info("response status :" + response.getStatus());
           	postmanTest.setResponseStatus(""+response.getStatus());
           	postmanTest.setMethodType((String)request.get("method"));
+          	postmanTest.setTestRequestId(this.configId);
           
 			jsEngine.getContext().setAttribute("req_status", response.getStatus(), ScriptContext.GLOBAL_SCOPE);
 			if (response.getStatus() >= 300) {
@@ -431,7 +428,14 @@ public class PostmanProcessor extends Script {
 			response.close();
 			jsEngine.getContext().setAttribute("req_response", value, ScriptContext.GLOBAL_SCOPE);
           	try{
-               crossStorageApi.createOrUpdate(defaultRepo, postmanTest);
+              log.info( new StringBuilder("postmanTest:{responseStatus=").append(postmanTest.getResponseStatus()).append(", ")
+                       .append("methodType=").append(postmanTest.getMethodType()).append(", ")
+                       .append("testRequestId=").append(postmanTest.getTestRequestId()).append(", ")
+                       .append("requestBody=").append(postmanTest.getRequestBody()).append(", ")
+                       .append("testConfigId=").append(postmanTest.getTestConfigId()).append(", ")
+                       .append("endpoint=").append(postmanTest.getEndpoint())
+                       .append("}").toString());
+              crossStorageApi.createOrUpdate(defaultRepo, postmanTest);
             } catch(Exception ex){
               log.error(ex.getMessage());
             }
@@ -454,10 +458,13 @@ public class PostmanProcessor extends Script {
 			return result.toString();
 		}
 
-		public void executeEvent(String itemName, String eventName, ArrayList<Object> events) throws ScriptException {
-			for (Object e : events) {
+		public void executeEvent(String itemName, String eventName, ArrayList<Object> events) throws ScriptException {		
+          for (Object e : events) {              
 				Map<String, Object> event = (Map<String, Object>) e;
+                //event.keySet().forEach(k->log.info(k.toString()));
 				String listen = (String) (event.get("listen"));
+                log.info("listen="+listen);
+                log.info("eventName.equals(listen) => "+eventName.equals(listen));
 				if (eventName.equals(listen)) {
 					Map<String, Object> script = (Map<String, Object>) event.get("script");
 					if ("text/javascript".equals(script.get("type"))) {
@@ -470,7 +477,7 @@ public class PostmanProcessor extends Script {
 						}
 						String scriptSource = sb.toString();
 
-						String preSecript = "var pm={};\n" +
+						String preScript = "var pm={};\n" +
 								"pm.info={};\n" +
 								"pm.info.eventName='" + eventName + "';\n" +
 								"pm.info.iteration=1;\n" +
@@ -479,15 +486,15 @@ public class PostmanProcessor extends Script {
 								"pm.info.requestId='" + event.get("id") + "';\n" +
 								"pm.environment=context;\n" +
 								"pm.test = function(s,f){\n" +
-								"let result = null;\n" +
+								"var result = null;\n" +
 								"try{ result=f(); }\n" +
 								"catch(error){throw 'test failed: '+s+' reason: '+error};\n" +
-								"if(result != undefined){;\n" +
+								"if(result != undefined){\n" +
 								"if(!result){throw 'test failed: '+s;}" +
 								"};\n" +
 								"};";
 						if ("test".equals(eventName)) {
-							preSecript += "pm.response = {};\n" +
+							preScript += "pm.response = {};\n" +
 									"pm.response.text=function(){ return req_response};\n" +
 									"pm.response.json=function(){ return JSON.parse(req_response)};" +
 									"pm.response.to={};\n" +
@@ -496,7 +503,7 @@ public class PostmanProcessor extends Script {
 									"pm.response.to.be={};\n" +
 									"pm.response.to.be.oneOf=function(status){if(!status.includes(req_status)){throw 'invalid status'+s}};\n";
 						}
-						scriptSource = preSecript + scriptSource;
+						scriptSource = preScript + scriptSource;
 						log.info("script = " + scriptSource);
 						jsEngine.eval(scriptSource);
 					}

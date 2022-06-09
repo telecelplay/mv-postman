@@ -54,7 +54,7 @@
 						},
 						{
 							"key": "username",
-							"value": "meveo.admin",
+							"value": "{{keycloakUsername}}",
 							"type": "text"
 						},
 						{
