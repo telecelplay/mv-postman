@@ -93,6 +93,60 @@
 				"description": "Request Keycloak and get auth token"
 			},
 			"response": []
+		},
+		{
+			"name": "local-countries-by-status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{protocol}}://{{keycloak.hostname}}:{{port}}/{{webContext}}/rest/countries-by-status?selectByStatus=true&active=true",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{keycloak.hostname}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{webContext}}",
+						"rest",
+						"countries-by-status"
+					],
+					"query": [
+						{
+							"key": "selectByStatus",
+							"value": "true"
+						},
+						{
+							"key": "active",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [

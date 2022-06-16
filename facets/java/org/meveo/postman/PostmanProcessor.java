@@ -102,8 +102,10 @@ public class PostmanProcessor extends Script {
 	private class LoggingFilter implements ClientRequestFilter {
 		@Override
 		public void filter(ClientRequestContext requestContext) throws IOException {
-			log.info(requestContext.getEntity().toString());
-			log.info("Headers      : {}", requestContext.getHeaders());
+			if(requestContext.getEntity() != null) {
+				log.info(requestContext.getEntity().toString());
+				log.info("Headers      : {}", requestContext.getHeaders());
+			}
 		}
 	}
 
